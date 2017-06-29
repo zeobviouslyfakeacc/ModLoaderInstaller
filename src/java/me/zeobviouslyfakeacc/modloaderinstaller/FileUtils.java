@@ -1,0 +1,106 @@
+package me.zeobviouslyfakeacc.modloaderinstaller;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+
+import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import static java.nio.file.StandardOpenOption.READ;
+import static java.nio.file.StandardOpenOption.WRITE;
+import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.DLL_NAME;
+import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.ERROR_SHA1;
+import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.XOR_NAME;
+
+public class FileUtils {
+
+	private static final int BUFFER_SIZE = 16_384;
+
+	public static String hashFile(Path path) {
+		if (path == null) return "";
+		if (!Files.exists(path)) return "";
+
+		try {
+			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+			byte[] rawBytes = Files.readAllBytes(path);
+			byte[] hash = sha1.digest(rawBytes);
+			return new BigInteger(1, hash).toString(16);
+		} catch (IOException | NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return ERROR_SHA1;
+	}
+
+	public static void applyXOR(Path assemblyFile, long limit) throws URISyntaxException, IOException {
+		Path inputFile = assemblyFile.resolveSibling(DLL_NAME + ".bak");
+		Files.move(assemblyFile, inputFile);
+
+		FileSystem zipFs = null;
+		try {
+			URI uri = FileUtils.class.getResource("/" + XOR_NAME).toURI();
+			if (uri.toString().startsWith("jar")) {
+				zipFs = FileSystems.newFileSystem(uri, Collections.singletonMap("create", "true"));
+			}
+
+			try (FileChannel inputChannel = FileChannel.open(inputFile, READ);
+			     FileChannel xorChannel = FileChannel.open(Paths.get(uri), READ);
+			     FileChannel outputChannel = FileChannel.open(assemblyFile, WRITE, CREATE_NEW)) {
+				xorFiles(inputChannel, xorChannel, outputChannel, limit);
+			}
+		} catch (Throwable t) {
+			Files.deleteIfExists(assemblyFile);
+			Files.move(inputFile, assemblyFile);
+			throw t;
+		} finally {
+			Files.deleteIfExists(inputFile);
+			if (zipFs != null) zipFs.close();
+		}
+	}
+
+	public static void xorFiles(SeekableByteChannel inputA, SeekableByteChannel inputB,
+	                            SeekableByteChannel outputChannel, long limit) throws IOException {
+		ByteBuffer aBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+		ByteBuffer bBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+		ByteBuffer outBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+
+		do {
+			if (inputA.position() == inputA.size()) inputA.position(0);
+			if (inputB.position() == inputB.size()) inputB.position(0);
+
+			inputA.read(aBuffer);
+			inputB.read(bBuffer);
+			aBuffer.flip();
+			bBuffer.flip();
+			int cap = min(aBuffer.remaining(), bBuffer.remaining(), outBuffer.remaining());
+			for (int i = 0; i < cap; i += 8) {
+				long a = aBuffer.getLong();
+				long b = bBuffer.getLong();
+				outBuffer.putLong(a ^ b);
+			}
+			aBuffer.compact();
+			bBuffer.compact();
+
+			outBuffer.flip();
+			long bytesRequired = limit - outputChannel.size();
+			if (outBuffer.limit() > bytesRequired) outBuffer.limit((int) bytesRequired);
+			outputChannel.write(outBuffer);
+			outBuffer.compact();
+		} while (outputChannel.size() < limit);
+	}
+
+	// Simple 3-input min
+	private static int min(int a, int b, int c) {
+		return Math.min(a, Math.min(b, c));
+	}
+}
