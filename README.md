@@ -55,5 +55,5 @@ If you are able to test the the installer and mod loader on any of these platfor
 ## Mod List
 
 - AddModdedToVersionString by zeobviouslyfakeacc (installed by default)
-- DeveloperConsole by FINDarkside
+- [DeveloperConsole](https://github.com/FINDarkside/TLD-Developer-Console) by FINDarkside
 - More to come!
