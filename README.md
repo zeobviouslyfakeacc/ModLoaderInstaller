@@ -54,6 +54,8 @@ If you are able to test the the installer and mod loader on any of these platfor
 
 ## Mod List
 
-- AddModdedToVersionString by zeobviouslyfakeacc (installed by default)
+- [AddModdedToVersionString](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/AddModdedToVersionString) by zeobviouslyfakeacc (installed by default)
 - [DeveloperConsole](https://github.com/FINDarkside/TLD-Developer-Console) by FINDarkside
-- More to come!
+- [DisableTracking](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableTracking) by zeobviouslyfakeacc
+- [RememberBreakDownItem](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/RememberBreakDownItem) by zeobviouslyfakeacc
+- If you've created a mod and would like it to be included in this list, please contact me! :)
