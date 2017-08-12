@@ -39,7 +39,7 @@ If you are able to test the the installer and mod loader on any of these platfor
 - Add the mod's DLL file(s) to the directory called  
   `<Steam>/SteamApps/common/TheLongDark/mods`,  
   which the installer program should've already created.
-
+  
 ### For developers:
 
 - Install the mod loader as usual.
