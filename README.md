@@ -56,6 +56,9 @@ If you are able to test the the installer and mod loader on any of these platfor
 
 - [AddModdedToVersionString](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/AddModdedToVersionString) by zeobviouslyfakeacc (installed by default)
 - [DeveloperConsole](https://github.com/FINDarkside/TLD-Developer-Console) by FINDarkside
+- [DisableBreathEffect](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableBreathEffect) by zeobviouslyfakeacc
 - [DisableTracking](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableTracking) by zeobviouslyfakeacc
 - [RememberBreakDownItem](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/RememberBreakDownItem) by zeobviouslyfakeacc
+- [ShowMapLocation](https://github.com/WulfMarius/ShowMapLocation/) by WulfMarius
+- [WildlifeBegone](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/WildlifeBegone) by zeobviouslyfakeacc
 - If you've created a mod and would like it to be included in this list, please contact me! :)
