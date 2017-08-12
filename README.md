@@ -39,6 +39,18 @@ If you are able to test the the installer and mod loader on any of these platfor
 - Add the mod's DLL file(s) to the directory called  
   `<Steam>/SteamApps/common/TheLongDark/mods`,  
   which the installer program should've already created.
+  
+### For developers:
+
+- Install the mod loader as usual.
+- In Visual Studio, create a new **.NET Framework Class Library** project
+- Open the project settings and set the compilation target to **.NET Framework 3.5** or lower
+- Add the following files from `<Steam>/SteamApps/common/TheLongDark/tld_data/Managed/` as dependencies:
+  - `Assembly-CSharp.dll`
+  - `Harmony.dll`
+  - `UnityEngine.dll`
+- Follow the instructions in the [Harmony wiki](https://github.com/pardeike/Harmony/wiki) on how to patch existing methods
+- The mod loader will also call any `public static void OnLoad()` methods in any types it can find.
 
 ## Mod List
 
