@@ -58,6 +58,7 @@ If you are able to test the the installer and mod loader on any of these platfor
 - [DeveloperConsole](https://github.com/FINDarkside/TLD-Developer-Console) by FINDarkside
 - [DisableBreathEffect](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableBreathEffect) by zeobviouslyfakeacc
 - [DisableTracking](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableTracking) by zeobviouslyfakeacc
+- [DurableWhetstone](https://github.com/WulfMarius/DurableWhetstone) by WulfMarius
 - [RememberBreakDownItem](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/RememberBreakDownItem) by zeobviouslyfakeacc
 - [ShowMapLocation](https://github.com/WulfMarius/ShowMapLocation/) by WulfMarius
 - [WildlifeBegone](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/WildlifeBegone) by zeobviouslyfakeacc
