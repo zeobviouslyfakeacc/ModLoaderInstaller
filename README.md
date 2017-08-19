@@ -24,10 +24,10 @@ If you are able to test the the installer and mod loader on any of these platfor
 **Installing the tool:**
 
 - **Download** the latest release from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases)
-  - This is a JavaFX 8 application. Make sure you have Java 8 installed.  
+  - This is a JavaFX 8 application. **Make sure you have installed Java 8** or newer.  
     **Linux users** might have to install the `openjfx` package if they're using the OpenJDK distribution
 - **Run** the Java application  
-  **Windows users** can just double click the JAR file  
+  **Windows users** can usually just double click the JAR file 
   **Linux users** may need to use `java -jar ModLoaderInstaller.jar`
 - Select the file `<Steam>/SteamApps/common/TheLongDark/tld_data/Managed/Rewired_Core.dll`
 - Press the "Patch" or "Update" button
@@ -59,7 +59,10 @@ If you are able to test the the installer and mod loader on any of these platfor
 - [DisableBreathEffect](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableBreathEffect) by zeobviouslyfakeacc
 - [DisableTracking](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableTracking) by zeobviouslyfakeacc
 - [DurableWhetstone](https://github.com/WulfMarius/DurableWhetstone) by WulfMarius
+- [FreeLookInCars](https://github.com/WulfMarius/FreeLookInCars) by WulfMarius
 - [RememberBreakDownItem](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/RememberBreakDownItem) by zeobviouslyfakeacc
 - [ShowMapLocation](https://github.com/WulfMarius/ShowMapLocation/) by WulfMarius
+- [SkipIntro](https://github.com/The5heepDev/SkipIntro) by ossian
+- [UModTld](http://ubersoft.org/umodtld/) by UberFoX and FINDarkside
 - [WildlifeBegone](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/WildlifeBegone) by zeobviouslyfakeacc
 - If you've created a mod and would like it to be included in this list, please contact me! :)
