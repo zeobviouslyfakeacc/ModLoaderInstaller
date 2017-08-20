@@ -55,6 +55,7 @@ If you are able to test the the installer and mod loader on any of these platfor
 ## Mod List
 
 - [AddModdedToVersionString](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/AddModdedToVersionString) by zeobviouslyfakeacc (installed by default)
+- [Binoculars](https://github.com/WulfMarius/Binoculars) by WulfMarius
 - [DeveloperConsole](https://github.com/FINDarkside/TLD-Developer-Console) by FINDarkside
 - [DisableBreathEffect](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableBreathEffect) by zeobviouslyfakeacc
 - [DisableTracking](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableTracking) by zeobviouslyfakeacc
