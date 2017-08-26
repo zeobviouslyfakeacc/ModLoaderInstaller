@@ -7,11 +7,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
@@ -48,35 +44,36 @@ public final class FileUtils {
 
 	public static void applyXOR(Path assemblyFile, long limit) throws URISyntaxException, IOException {
 		Path inputFile = assemblyFile.resolveSibling(DLL_NAME + ".bak");
-		Files.move(assemblyFile, inputFile);
+		URI xorUri = FileUtils.class.getResource("/" + XOR_NAME).toURI();
 
-		FileSystem zipFs = null;
-		try {
-			URI uri = FileUtils.class.getResource("/" + XOR_NAME).toURI();
-			if (uri.toString().startsWith("jar")) {
-				zipFs = FileSystems.newFileSystem(uri, Collections.singletonMap("create", "true"));
-			}
+		Files.move(assemblyFile, inputFile, StandardCopyOption.REPLACE_EXISTING);
 
-			try (FileChannel inputChannel = FileChannel.open(inputFile, READ);
-			     FileChannel xorChannel = FileChannel.open(Paths.get(uri), READ);
-			     FileChannel outputChannel = FileChannel.open(assemblyFile, WRITE, CREATE_NEW)) {
-				xorFiles(inputChannel, xorChannel, outputChannel, limit);
-			}
+		try (FileSystem fileSystem = createFileSystem(xorUri); // Required to resolve xorUri
+		     FileChannel inputChannel = FileChannel.open(inputFile, READ);
+		     FileChannel xorChannel = FileChannel.open(Paths.get(xorUri), READ);
+		     FileChannel outputChannel = FileChannel.open(assemblyFile, WRITE, CREATE_NEW)) {
+
+			xorFiles(inputChannel, xorChannel, outputChannel, limit);
 		} catch (Throwable t) {
 			Files.deleteIfExists(assemblyFile);
 			Files.move(inputFile, assemblyFile);
 			throw t;
-		} finally {
-			Files.deleteIfExists(inputFile);
-			if (zipFs != null) zipFs.close();
+		}
+	}
+
+	private static FileSystem createFileSystem(URI uri) throws IOException {
+		if ("jar".equals(uri.getScheme())) {
+			return FileSystems.newFileSystem(uri, Collections.emptyMap());
+		} else {
+			return null;
 		}
 	}
 
 	public static void xorFiles(SeekableByteChannel inputA, SeekableByteChannel inputB,
 	                            SeekableByteChannel outputChannel, long limit) throws IOException {
-		ByteBuffer aBuffer = ByteBuffer.allocate(BUFFER_SIZE);
-		ByteBuffer bBuffer = ByteBuffer.allocate(BUFFER_SIZE);
-		ByteBuffer outBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+		ByteBuffer aBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+		ByteBuffer bBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+		ByteBuffer outBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
 
 		do {
 			if (inputA.position() == inputA.size()) inputA.position(0);

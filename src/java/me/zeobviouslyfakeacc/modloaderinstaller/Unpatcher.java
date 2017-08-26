@@ -54,5 +54,8 @@ public class Unpatcher extends Task<Void> {
 
 		Path harmonyFile = path.resolveSibling("Harmony.dll");
 		Files.deleteIfExists(harmonyFile);
+
+		Path rewiredBackup = path.resolveSibling("Rewired_Core.dll.bak");
+		Files.deleteIfExists(rewiredBackup);
 	}
 }
