@@ -23,9 +23,13 @@ import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.DLL_NAME;
 import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.ERROR_SHA1;
 import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.XOR_NAME;
 
-public class FileUtils {
+public final class FileUtils {
 
 	private static final int BUFFER_SIZE = 16_384;
+
+	private FileUtils() {
+		throw new Error("No instances!");
+	}
 
 	public static String hashFile(Path path) {
 		if (path == null) return "";

@@ -24,7 +24,7 @@
                     <Insets />
                 </VBox.margin>
             </Label>
-            <Label fx:id="instructionsLabel" text="Only works for The Long Dark ${version}.&#10;&#10;To get started, select the file called&#10;    &lt;SteamApps&gt;\common\TheLongDark\tld_data\Managed\${dll_name}" />
+            <Label fx:id="instructionsLabel" text="Tested with The Long Dark ${version}, but may also work for newer versions.&#10;&#10;To get started, select the file called&#10;    &lt;SteamApps&gt;\common\TheLongDark\tld_Data\Managed\${dll_name}" />
             <GridPane alignment="CENTER_LEFT" hgap="10.0">
                 <columnConstraints>
                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
