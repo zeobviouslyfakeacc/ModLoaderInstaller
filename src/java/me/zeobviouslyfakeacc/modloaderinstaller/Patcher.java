@@ -75,8 +75,8 @@ public class Patcher extends Task<Void> {
 		Path modsDir = path.getParent().getParent().resolveSibling("mods");
 		Files.createDirectories(modsDir);
 
-		Path defaultMod = modsDir.resolve("AddModdedToVersionString.dll");
-		copyResource("/AddModdedToVersionString.dll", defaultMod);
+		Path oldDefaultMod = modsDir.resolve("AddModdedToVersionString.dll");
+		Files.deleteIfExists(oldDefaultMod);
 	}
 
 	private static void copyResource(String resource, Path targetPath) throws IOException {
