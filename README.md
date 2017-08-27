@@ -1,6 +1,7 @@
 # Mod Loader for The Long Dark
 
-Only being able to install one mod at a time sucks and having to ship the entirety of `Assembly-CSharp.dll` for a mod that changes a few lines of code isn't great, either.
+Only being able to install one mod at a time sucks and having to ship the entirety of
+`Assembly-CSharp.dll` for a mod that changes a few lines of code isn't great, either.
 
 **Enter TLD Mod Loader**
 
@@ -9,13 +10,16 @@ It also makes the modder's job easier by making method patching a breeze.
 Furthermore, the mod DLLs should only include the code that is being changed instead of the whole assembly.  
 Thus, mods are generally only a few kilobytes in size and usually don't contain any copyrighted material.
 
-*This project uses [Harmony](https://github.com/pardeike/Harmony) for its method patching. Many thanks to the developers of this amazing tool!*
+*This project uses [Harmony](https://github.com/pardeike/Harmony) for its method patching.
+Many thanks to the developers of this amazing tool!*
 
 ## Compatibility
 
-This tool has been tested for **The Long Dark v0.426** on **Windows x64** and **Linux x64**.  
+This tool has been tested for **The Long Dark v1.12** on **Windows x64** and **Linux x64**.  
 Mac OS and 32-bit operating systems have not been tested, but the tool should theoretically work there, too.  
-If you are able to test the the installer and mod loader on any of these platforms, please report your findings - whether it be successful or not - to the [issues page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/issues). Thank you!
+If you are able to test the the installer and mod loader on any of these platforms,
+please report your findings - whether it be successful or not - to the
+[issues page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/issues). Thank you!
 
 ## Installation instructions
 
@@ -29,7 +33,7 @@ If you are able to test the the installer and mod loader on any of these platfor
 - **Run** the Java application  
   **Windows users** can usually just double click the JAR file 
   **Linux users** may need to use `java -jar ModLoaderInstaller.jar`
-- Select the file `<Steam>/SteamApps/common/TheLongDark/tld_data/Managed/Rewired_Core.dll`
+- Select the file `<Steam>/SteamApps/common/TheLongDark/tld_Data/Managed/Rewired_Core.dll`
 - Press the "Patch" or "Update" button
 - If the text in the lower left corner says "Done!", the mod loader has been installed correctly.  
   If it doesn't, please create an issue on the [issues page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/issues)!
@@ -39,6 +43,14 @@ If you are able to test the the installer and mod loader on any of these platfor
 - Add the mod's DLL file(s) to the directory called  
   `<Steam>/SteamApps/common/TheLongDark/mods`,  
   which the installer program should've already created.
+
+**Troubleshooting:**
+
+- If the installer doesn't let you patch `Rewired_Core.dll` because it says the file is `Invalid`,  
+  you'll need to restore the original DLL file:
+  - If you've installed an earlier version of the mod loader, re-run the old installer to unpatch the file.
+  - Alternatively, if you're using Steam, you can use the [Verify integrity of game files](https://support.steampowered.com/kb_article.php?ref=2037-QEUH-3335) option.
+  - If you've pirated TLD, I can't help you. You'll need to buy the game or at least find a distribution that includes binary-identical versions of all files.
 
 ### For developers:
 
@@ -54,16 +66,4 @@ If you are able to test the the installer and mod loader on any of these platfor
 
 ## Mod List
 
-- [AddModdedToVersionString](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/AddModdedToVersionString) by zeobviouslyfakeacc (installed by default)
-- [Binoculars](https://github.com/WulfMarius/Binoculars) by WulfMarius
-- [DeveloperConsole](https://github.com/FINDarkside/TLD-Developer-Console) by FINDarkside
-- [DisableBreathEffect](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableBreathEffect) by zeobviouslyfakeacc
-- [DisableTracking](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/DisableTracking) by zeobviouslyfakeacc
-- [DurableWhetstone](https://github.com/WulfMarius/DurableWhetstone) by WulfMarius
-- [FreeLookInCars](https://github.com/WulfMarius/FreeLookInCars) by WulfMarius
-- [RememberBreakDownItem](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/RememberBreakDownItem) by zeobviouslyfakeacc
-- [ShowMapLocation](https://github.com/WulfMarius/ShowMapLocation/) by WulfMarius
-- [SkipIntro](https://github.com/The5heepDev/SkipIntro) by ossian
-- [UModTld](http://ubersoft.org/umodtld/) by UberFoX and FINDarkside
-- [WildlifeBegone](https://github.com/zeobviouslyfakeacc/MiniMods/tree/master/WildlifeBegone) by zeobviouslyfakeacc
-- If you've created a mod and would like it to be included in this list, please contact me! :)
+[Moved to this wiki page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/wiki/Mod-List)
