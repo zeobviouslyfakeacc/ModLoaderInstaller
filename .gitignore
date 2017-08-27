@@ -2,3 +2,5 @@
 .vs
 obj
 out
+test
+packages

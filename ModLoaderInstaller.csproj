@@ -32,13 +32,17 @@
     <RootNamespace>ModLoader</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp" />
+    <Reference Include="Harmony" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\csharp\DependencyGraph.cs" />
     <Compile Include="src\csharp\ModLoader.cs" />
+    <Compile Include="src\csharp\Patches.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

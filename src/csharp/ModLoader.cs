@@ -1,52 +1,126 @@
-﻿using System;
-using System.Reflection;
+﻿using Harmony;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 
-namespace ModLoader
-{
-	public class ModLoader
-	{
-		public static void Start()
-		{
-			try
-			{
-				Debug.Log("Loading Harmony...");
-				Assembly harmonyAssembly = Assembly.LoadFrom("tld_Data/Managed/Harmony.dll");
-				Type harmonyInstanceType = harmonyAssembly.GetType("Harmony.HarmonyInstance", true);
-				MethodInfo createMethod = harmonyInstanceType.GetMethod("Create", new Type[] { typeof(string) });
-				MethodInfo patchAllMethod = harmonyInstanceType.GetMethod("PatchAll", new Type[] { typeof(Assembly) });
-				Debug.Log("Harmony loaded");
+namespace ModLoader {
 
-				DirectoryInfo dir = new DirectoryInfo("mods");
-				FileInfo[] files = dir.GetFiles("*.dll");
-				foreach (FileInfo file in files)
-				{
-					Debug.Log("Loading mod " + file.Name);
-					// Load Assembly and dependencies. Just resolve if already loaded (same for dependencies)
-					Assembly assembly = Assembly.LoadFrom(file.FullName);
+	public class ModLoader {
 
-					// Search all Types in Assembly for HarmonyPatch instructions
-					object harmonyInstance = createMethod.Invoke(null, new object[] { assembly.FullName });
-					patchAllMethod.Invoke(harmonyInstance, new object[] { assembly });
+		internal static string failureMessage = "";
+		internal static bool HasFailed => failureMessage != "";
 
-					// Then call static "OnLoad" method on all types where this method is defined
-					foreach (Type type in assembly.GetTypes())
-					{
+		public static void Start() {
+			// Patch in Mod Loader helpers
+			HarmonyInstance.Create("Mod Loader").PatchAll(Assembly.GetExecutingAssembly());
+
+			// Load mods
+			DirectoryInfo modsDir = GetModsDirectory();
+			FileInfo[] files = modsDir.GetFiles("*.dll");
+
+			try {
+				DependencyGraph dependencyGraph = LoadModAssemblies(files);
+				List<Assembly> sortedAssemblies = dependencyGraph.TopologicalSort();
+
+				ApplyHarmonyPatches(sortedAssemblies);
+				CallOnLoadMethods(sortedAssemblies);
+
+				Debug.Log("All mods successfully loaded!");
+			} catch (ModLoadingException mle) {
+				failureMessage = mle.Message;
+			}
+		}
+
+		private static DirectoryInfo GetModsDirectory() {
+			FileInfo modLoaderFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
+			DirectoryInfo tldBaseDirectory = modLoaderFile.Directory.Parent.Parent;
+			return new DirectoryInfo(Path.Combine(tldBaseDirectory.FullName, "mods"));
+		}
+
+		private static DependencyGraph LoadModAssemblies(FileInfo[] assemblyFiles) {
+			Debug.Log("Loading mod assemblies");
+			List<Assembly> loadedAssemblies = new List<Assembly>();
+			List<String> failedAssemblies = new List<String>();
+
+			foreach (FileInfo file in assemblyFiles) {
+				if (file.Extension != ".dll") // GetFiles filter is too inclusive
+					continue;
+
+				try {
+					Assembly modAssembly = Assembly.LoadFrom(file.FullName);
+					loadedAssemblies.Add(modAssembly);
+				} catch (Exception e) {
+					failedAssemblies.Add(file.Name + ExceptionToString(e));
+					Debug.LogError("Loading mod " + file.Name + " failed!");
+					Debug.LogException(e);
+				}
+			}
+
+			if (failedAssemblies.Count > 0) {
+				throw new ModLoadingException("The following mods could not be loaded:", failedAssemblies);
+			}
+
+			return new DependencyGraph(loadedAssemblies);
+		}
+
+		private static void ApplyHarmonyPatches(List<Assembly> modAssemblies) {
+			Debug.Log("Applying Harmony patches");
+			List<String> failedMods = new List<String>();
+
+			foreach (Assembly modAssembly in modAssemblies) {
+				try {
+					HarmonyInstance.Create(modAssembly.FullName).PatchAll(modAssembly);
+				} catch (Exception e) {
+					failedMods.Add(modAssembly.GetName() + ExceptionToString(e));
+					Debug.LogError("Patching mod " + modAssembly.GetName() + " failed!");
+					Debug.LogException(e);
+				}
+			}
+
+			if (failedMods.Count > 0) {
+				throw new ModLoadingException("The following mods could not be patched:", failedMods);
+			}
+		}
+
+		private static void CallOnLoadMethods(List<Assembly> modAssemblies) {
+			Debug.Log("Calling OnLoad methods");
+
+			foreach (Assembly modAssembly in modAssemblies) {
+				foreach (Type type in modAssembly.GetTypes()) {
+					try {
 						MethodInfo onLoad = type.GetMethod("OnLoad", new Type[0]);
-						if (onLoad != null)
-						{
-							onLoad.Invoke(null, new object[0]);
+						onLoad?.Invoke(null, new object[0]);
+					} catch (Exception e) {
+						if (e is TargetInvocationException && e.InnerException != null) {
+							e = e.InnerException;
 						}
+
+						string message = "OnLoad method failed for type " + type.FullName + " of mod " + modAssembly.GetName().Name;
+						Debug.LogError(message);
+						Debug.LogException(e);
+						throw new ModLoadingException(message + ExceptionToString(e));
 					}
 				}
-				Debug.Log("All mods successfully loaded!");
 			}
-			catch (Exception e)
-			{
-				Debug.LogError("Loading mods failed!");
-				Debug.LogException(e);
-			}
+		}
+
+		private static string ExceptionToString(Exception ex) {
+			return " - " + ex.GetType().Name + ": " + ex.Message;
+		}
+	}
+
+	internal class ModLoadingException : Exception {
+
+		internal ModLoadingException(String message) : base(message) {
+		}
+
+		internal ModLoadingException(String baseMessage, List<String> mods) : base(BuildMessage(baseMessage, mods)) {
+		}
+
+		private static string BuildMessage(String baseMessage, List<String> mods) {
+			return baseMessage + "\n" + String.Join("\n", mods.ToArray());
 		}
 	}
 }

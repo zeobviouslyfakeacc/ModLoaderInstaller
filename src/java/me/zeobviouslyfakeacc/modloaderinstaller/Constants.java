@@ -13,6 +13,6 @@ public final class Constants {
 	public static final long PATCHED_SIZE = 1418752L;
 	public static final String UNPATCHED_SHA1 = "77e4ea76ec93d357bf9272363700b9c92c99e9e";
 	public static final String PATCHED_SHA1 = "ad73dc36f160f9e85f77e8a86d7f64e09e22a2a4";
-	public static final String MOD_LOADER_SHA1 = "2d93e8b605cd426ac6c1e1311e7d3b69b57723ab";
+	public static final String MOD_LOADER_SHA1 = "65756568a54b4a03f72911f437c8847db1fb2049";
 	public static final String ERROR_SHA1 = "- ERROR -";
 }
