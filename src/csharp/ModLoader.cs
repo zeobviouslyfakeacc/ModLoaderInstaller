@@ -34,8 +34,15 @@ namespace ModLoader {
 		}
 
 		private static DirectoryInfo GetModsDirectory() {
-			FileInfo modLoaderFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
-			DirectoryInfo tldBaseDirectory = modLoaderFile.Directory.Parent.Parent;
+			DirectoryInfo dataDir = new DirectoryInfo(Application.dataPath);
+
+			DirectoryInfo tldBaseDirectory;
+			if (Application.platform == RuntimePlatform.OSXPlayer) {
+				tldBaseDirectory = dataDir.Parent.Parent; // TheLongDark/tld.app/Contents/
+			} else {
+				tldBaseDirectory = dataDir.Parent; // TheLongDark/tld_Data/
+			}
+
 			return new DirectoryInfo(Path.Combine(tldBaseDirectory.FullName, "mods"));
 		}
 

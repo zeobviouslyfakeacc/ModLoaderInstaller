@@ -72,11 +72,20 @@ public class Patcher extends Task<Void> {
 		Path harmonyFile = path.resolveSibling("Harmony.dll");
 		copyResource("/Harmony.dll", harmonyFile);
 
-		Path modsDir = path.getParent().getParent().resolveSibling("mods");
+		Path modsDir = getModsDirectory();
 		Files.createDirectories(modsDir);
 
 		Path oldDefaultMod = modsDir.resolve("AddModdedToVersionString.dll");
 		Files.deleteIfExists(oldDefaultMod);
+	}
+
+	private Path getModsDirectory() {
+		int levelsUp = Constants.isMacOs() ? 5 : 2;
+		Path modsDir = path;
+		for (int i = 0; i < levelsUp; ++i) {
+			modsDir = modsDir.getParent();
+		}
+		return modsDir.resolveSibling("mods");
 	}
 
 	private static void copyResource(String resource, Path targetPath) throws IOException {

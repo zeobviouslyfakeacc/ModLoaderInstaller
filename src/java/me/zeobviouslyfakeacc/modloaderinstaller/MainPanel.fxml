@@ -20,11 +20,8 @@
                 <font>
                     <Font name="System Bold" size="20.0" />
                 </font>
-                <VBox.margin>
-                    <Insets />
-                </VBox.margin>
             </Label>
-            <Label fx:id="instructionsLabel" text="Tested with The Long Dark ${version}, but may also work for newer versions.&#10;&#10;To get started, select the file called&#10;    &lt;SteamApps&gt;\common\TheLongDark\tld_Data\Managed\${dll_name}" />
+            <Label fx:id="instructionsLabel" text="Tested with The Long Dark ${version}, but may also work for newer versions.&#10;&#10;To get started, select the file called&#10;   ${dll_path}" wrapText="true" />
             <GridPane alignment="CENTER_LEFT" hgap="10.0">
                 <columnConstraints>
                     <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
@@ -37,8 +34,11 @@
                 <Label text="Path to the DLL:" />
                 <Label text="File Status:" GridPane.rowIndex="1" />
                 <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
-                    <TextField fx:id="fileTextField" editable="false" prefColumnCount="30" />
+                    <TextField fx:id="fileTextField" editable="false" prefColumnCount="30" HBox.hgrow="ALWAYS" />
                     <Button fx:id="fileSelectButton" mnemonicParsing="false" onAction="#selectFile" text="..." />
+                    <padding>
+                        <Insets right="20.0" />
+                    </padding>
                 </HBox>
                 <Label fx:id="fileStatusLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <VBox.margin>
@@ -57,7 +57,7 @@
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </HBox.margin>
             </Label>
-         <Region HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="patchButton" defaultButton="true" mnemonicParsing="false" onAction="#patchOrUnpatch" text="Patch">
                 <HBox.margin>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

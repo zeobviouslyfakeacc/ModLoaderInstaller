@@ -44,7 +44,7 @@ public class MainPanel {
 		// Replace constants in instructions label
 		instructionsLabel.setText(instructionsLabel.getText()
 				.replace("${version}", TLD_VERSION)
-				.replace("${dll_name}", DLL_NAME));
+				.replace("${dll_path}", Constants.getDllPath()));
 
 		// Text field not selectable and displays selected file
 		fileTextField.setFocusTraversable(false);
