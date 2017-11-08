@@ -38,13 +38,18 @@ public enum FileStatus {
 		return (this == VALID_UNPATCHED || this == VALID_OUTDATED || this == VALID_PATCHED);
 	}
 
-	public static FileStatus forHash(String dllHash, String modLoaderHash) {
+	public static FileStatus forHashes(String dllHash, String modLoaderHash) {
 		if (dllHash == null || dllHash.isEmpty()) return NO_FILE;
+
 		switch (dllHash) {
 			case UNPATCHED_SHA1:
 				return VALID_UNPATCHED;
 			case PATCHED_SHA1:
-				return (MOD_LOADER_SHA1.equals(modLoaderHash)) ? VALID_PATCHED : VALID_OUTDATED;
+				if (MOD_LOADER_SHA1.equals(modLoaderHash)) {
+					return VALID_PATCHED;
+				} else {
+					return VALID_OUTDATED;
+				}
 			case ERROR_SHA1:
 				return ERROR;
 			default:

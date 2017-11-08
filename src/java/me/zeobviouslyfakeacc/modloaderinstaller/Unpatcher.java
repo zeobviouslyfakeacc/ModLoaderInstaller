@@ -32,7 +32,7 @@ public class Unpatcher extends Task<Void> {
 		try {
 			applyXOR(path, Constants.UNPATCHED_SIZE);
 		} catch (Throwable t) {
-			updateMessage("Patching failed. The modded file has been restored.");
+			updateMessage("Unpatching failed. The modded file has been restored.");
 			throw t;
 		}
 
@@ -41,7 +41,9 @@ public class Unpatcher extends Task<Void> {
 		try {
 			uninstallLibraries();
 		} catch (Throwable t) {
-			updateMessage("The game was successfully patched, but deleting libraries failed.");
+			updateMessage("The game files were successfully restored, but deleting libraries failed.");
+			t.printStackTrace();
+			return null; // Ignore exception in this case
 		}
 
 		updateMessage("Done!");

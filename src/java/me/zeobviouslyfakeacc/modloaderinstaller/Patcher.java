@@ -46,8 +46,7 @@ public class Patcher extends Task<Void> {
 				applyXOR(path, Constants.PATCHED_SIZE);
 			} catch (Throwable t) {
 				updateMessage("Patching failed. The original file has been restored.");
-				t.printStackTrace();
-				return null;
+				throw t;
 			}
 		}
 
@@ -57,8 +56,7 @@ public class Patcher extends Task<Void> {
 			installLibraries();
 		} catch (Throwable t) {
 			updateMessage("The game was successfully patched, but copying libraries failed.");
-			t.printStackTrace();
-			return null;
+			throw t;
 		}
 
 		updateMessage("Done!");
@@ -72,20 +70,11 @@ public class Patcher extends Task<Void> {
 		Path harmonyFile = path.resolveSibling("Harmony.dll");
 		copyResource("/Harmony.dll", harmonyFile);
 
-		Path modsDir = getModsDirectory();
+		Path modsDir = OperatingSystem.getCurrent().getModsDirectory(path);
 		Files.createDirectories(modsDir);
 
 		Path oldDefaultMod = modsDir.resolve("AddModdedToVersionString.dll");
 		Files.deleteIfExists(oldDefaultMod);
-	}
-
-	private Path getModsDirectory() {
-		int levelsUp = Constants.isMacOs() ? 5 : 2;
-		Path modsDir = path;
-		for (int i = 0; i < levelsUp; ++i) {
-			modsDir = modsDir.getParent();
-		}
-		return modsDir.resolveSibling("mods");
 	}
 
 	private static void copyResource(String resource, Path targetPath) throws IOException {

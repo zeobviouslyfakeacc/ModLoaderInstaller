@@ -1,31 +1,37 @@
 package me.zeobviouslyfakeacc.modloaderinstaller;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.DLL_NAME;
 import static me.zeobviouslyfakeacc.modloaderinstaller.Constants.TLD_VERSION;
 import static me.zeobviouslyfakeacc.modloaderinstaller.FileUtils.hashFile;
 
 public class MainPanel {
+
+	private static final OperatingSystem OPERATING_SYSTEM = OperatingSystem.getCurrent();
 
 	public final Property<Path> selectedFile = new SimpleObjectProperty<>(null);
 	public final Property<FileStatus> fileStatusProperty = new SimpleObjectProperty<>(FileStatus.NO_FILE);
@@ -44,14 +50,15 @@ public class MainPanel {
 		// Replace constants in instructions label
 		instructionsLabel.setText(instructionsLabel.getText()
 				.replace("${version}", TLD_VERSION)
-				.replace("${dll_path}", Constants.getDllPath()));
+				.replace("${exe_path}", OPERATING_SYSTEM.getExampleExecutablePath())
+				.replace("${dll_name}", DLL_NAME));
 
-		// Text field not selectable and displays selected file
-		fileTextField.setFocusTraversable(false);
-		fileTextField.textProperty().bind(Bindings.createStringBinding(() -> {
-			if (selectedFile.getValue() == null) return "";
-			return selectedFile.getValue().toAbsolutePath().toString();
-		}, selectedFile));
+		// Selected file depends on the path in the text field
+		// Not bound the "traditional" way as that caused duplicate calls to createPathFromText
+		fileTextField.setOnKeyReleased(ke -> selectedFile.setValue(createPathFromText(fileTextField.getText())));
+
+		// Only able to change file path when not currently patching
+		fileTextField.disableProperty().bind(working);
 
 		// File status depends on selected file
 		fileStatusBinding = Bindings.createObjectBinding(this::calculateHashes, selectedFile);
@@ -63,15 +70,38 @@ public class MainPanel {
 		fileStatusLabel.textFillProperty().bind(Bindings.createObjectBinding(
 				() -> fileStatusProperty.getValue().getDisplayColor(), fileStatusProperty));
 
-		// File select button should be focused
-		fileSelectButton.requestFocus();
+		// File select button should be focused (runLater -> when Scene graph is established)
+		Platform.runLater(() -> fileSelectButton.requestFocus());
 
 		// Patch button should only be enabled if file is valid and not currently patching
-		patchButton.disableProperty().bind(working.or(Bindings.createBooleanBinding(
-				() -> !fileStatusProperty.getValue().isValid(), fileStatusProperty)));
+		patchButton.disableProperty().bind(
+				Bindings.createBooleanBinding(() -> !fileStatusProperty.getValue().isValid(), fileStatusProperty)
+						.or(working));
 		patchButton.textProperty().bind(Bindings.createStringBinding(
-				() -> fileStatusProperty.getValue().getButtonText(),
-				fileStatusProperty));
+				() -> fileStatusProperty.getValue().getButtonText(), fileStatusProperty));
+	}
+
+	private static Path createPathFromText(String text) {
+		if (text == null || text.isEmpty()) return null;
+		if (text.startsWith("\"") && text.endsWith("\"")) text = text.substring(1, text.length() - 1);
+		if (!text.endsWith(DLL_NAME)) return null;
+
+		try {
+			Path path = Paths.get(text);
+			if (!Files.isRegularFile(path)) {
+				error("Read error", "The DLL file you selected cannot be found.");
+				return null;
+			} else if (!Files.isReadable(path) || !Files.isWritable(path)) {
+				error("Read error", "The DLL file you selected cannot be read from or written to.\n\n" +
+						"Make sure that the file is not marked read-only and\n" +
+						"that you have the required permissions to write to it.");
+				return null;
+			}
+
+			return path;
+		} catch (InvalidPathException ipe) {
+			return null;
+		}
 	}
 
 	private FileStatus calculateHashes() {
@@ -80,35 +110,45 @@ public class MainPanel {
 
 		String dllHash = hashFile(path);
 		String modLoaderHash = hashFile(path.resolveSibling("ModLoader.dll"));
-		return FileStatus.forHash(dllHash, modLoaderHash);
+		return FileStatus.forHashes(dllHash, modLoaderHash);
 	}
 
 	public void selectFile() {
-		selectedFile.setValue(null);
-
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Select \"" + DLL_NAME + "\"");
-		ExtensionFilter filter = new ExtensionFilter(DLL_NAME, DLL_NAME);
-		fileChooser.getExtensionFilters().add(filter);
-		fileChooser.setSelectedExtensionFilter(filter);
+		fileChooser.setTitle("Select \"" + OPERATING_SYSTEM.getExecutableName() + "\" or \"" + DLL_NAME + "\"");
+		ExtensionFilter exeFilter = new ExtensionFilter("TLD Executable", OPERATING_SYSTEM.getExtensionFilter());
+		fileChooser.getExtensionFilters().add(exeFilter);
+		ExtensionFilter dllFilter = new ExtensionFilter(DLL_NAME, DLL_NAME);
+		fileChooser.getExtensionFilters().add(dllFilter);
+		fileChooser.setSelectedExtensionFilter(exeFilter);
 
 		File selected = fileChooser.showOpenDialog(null);
+		if (selected == null || !selected.exists()) return;
 
-		if (selected == null || !selected.exists() || !selected.isFile()) return;
-		if (!selected.canRead() || !selected.canWrite()) {
-			selectedFile.setValue(null);
-			error("Read error", null, "The file you selected cannot be read from or written to.");
-			return;
+		Path dllPath;
+		if (DLL_NAME.equals(selected.getName())) {
+			dllPath = selected.toPath();
+		} else {
+			Path executablePath = selected.toPath();
+			dllPath = OPERATING_SYSTEM.getDLLPath(executablePath);
+
+			if (!Files.isRegularFile(dllPath)) {
+				selectedFile.setValue(null);
+				error("File error", "Expected the file \"" + DLL_NAME + "\" at path \n\"" + dllPath + "\",\n" +
+						"but no such file was present.");
+				return;
+			}
 		}
 
-		selectedFile.setValue(selected.toPath());
+		fileTextField.setText(dllPath.toString());
+		selectedFile.setValue(dllPath);
 	}
 
 	public void patchOrUnpatch() {
 		if (working.get()) return;
 		Path path = selectedFile.getValue();
 		if (path == null || !Files.isRegularFile(path) || !Files.isWritable(path)) {
-			error("Patch error", null, "The specified file was invalid or was not writable.");
+			error("Patch error", "The specified file was invalid or was not writable.");
 			return;
 		}
 
@@ -131,18 +171,62 @@ public class MainPanel {
 		}
 
 		working.set(true);
-		task.setOnSucceeded((ignored) -> {
+
+		task.setOnSucceeded(ignoredArg -> {
 			fileStatusBinding.invalidate();
 			working.set(false);
+			patchButton.requestFocus();
+		});
+		task.setOnFailed(ignoredArg -> {
+			error("Patching failed", "Patching error", messageProperty.get(), task.getException());
 		});
 	}
 
-	private static void error(String title, String header, String text) {
+	private static void error(String title, String text) {
 		Alert alert = new Alert(AlertType.ERROR);
+		setIcon(alert);
 		alert.setTitle(title);
-		alert.setHeaderText(header);
 		alert.setContentText(text);
 
 		alert.showAndWait();
+	}
+
+	private static void error(String title, String header, String text, Throwable cause) {
+		StringWriter stringWriter = new StringWriter(); // Doesn't need to be closed & is unbuffered
+		try (PrintWriter writer = new PrintWriter(stringWriter)) {
+			cause.printStackTrace(writer);
+		}
+
+		Alert alert = new Alert(AlertType.ERROR);
+		setIcon(alert);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+
+		String actualText = text + "\n\nPlease append this exception stacktrace when reporting this error:";
+		Label textLabel = new Label(actualText);
+		textLabel.setPadding(new Insets(0, 0, 10, 0));
+
+		TextArea exceptionText = new TextArea(stringWriter.toString());
+		exceptionText.setEditable(false);
+		exceptionText.setMaxHeight(Double.MAX_VALUE);
+		exceptionText.setMaxWidth(Double.MAX_VALUE);
+		GridPane.setHgrow(exceptionText, Priority.ALWAYS);
+		GridPane.setVgrow(exceptionText, Priority.ALWAYS);
+
+		GridPane alertContent = new GridPane();
+		alertContent.setMaxWidth(Double.MAX_VALUE);
+		alertContent.add(textLabel, 0, 0);
+		alertContent.add(exceptionText, 0, 1);
+
+		alert.getDialogPane().setContent(alertContent);
+		alert.showAndWait();
+	}
+
+	private static void setIcon(Dialog<?> dialog) {
+		Window window = dialog.getDialogPane().getScene().getWindow();
+		if (window instanceof Stage) {
+			Stage stage = (Stage) window;
+			stage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.png")));
+		}
 	}
 }

@@ -15,14 +15,8 @@ public class Main extends Application {
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 
-		int width = Constants.isWindows() ? 530 : Constants.isMacOs() ? 670 : 600;
-		int height = Constants.isWindows() ? 300 : 320;
-
 		primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/icon.png")));
-		primaryStage.setMinHeight(height);
-		primaryStage.setMinWidth(width);
-		primaryStage.setHeight(height);
-		primaryStage.setWidth(width);
+		primaryStage.sizeToScene();
 		primaryStage.setResizable(false);
 		primaryStage.setTitle("TLD Mod Loader Installer");
 		primaryStage.show();

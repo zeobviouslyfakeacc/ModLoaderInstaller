@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="250.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.zeobviouslyfakeacc.modloaderinstaller.MainPanel">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.zeobviouslyfakeacc.modloaderinstaller.MainPanel">
     <top>
         <VBox spacing="10.0">
             <Label alignment="CENTER" text="Mod Loader Installer" textAlignment="CENTER">
@@ -21,10 +21,10 @@
                     <Font name="System Bold" size="20.0" />
                 </font>
             </Label>
-            <Label fx:id="instructionsLabel" text="Tested with The Long Dark ${version}, but may also work for newer versions.&#10;&#10;To get started, select the file called&#10;   ${dll_path}" wrapText="true" />
+            <Label fx:id="instructionsLabel" text="Tested with The Long Dark ${version}, but may also work for newer versions.&#10;&#10;To get started, press the button and select the TLD executable&#10;(for example at ${exe_path}),&#10;or manually enter the path to ${dll_name} (not recommended)." />
             <GridPane alignment="CENTER_LEFT" hgap="10.0">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                     <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
                 </columnConstraints>
                 <rowConstraints>
@@ -34,8 +34,8 @@
                 <Label text="Path to the DLL:" />
                 <Label text="File Status:" GridPane.rowIndex="1" />
                 <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
-                    <TextField fx:id="fileTextField" editable="false" prefColumnCount="30" HBox.hgrow="ALWAYS" />
-                    <Button fx:id="fileSelectButton" mnemonicParsing="false" onAction="#selectFile" text="..." />
+                    <TextField fx:id="fileTextField" prefColumnCount="32" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="fileSelectButton" accessibleText="Select file" mnemonicParsing="false" onAction="#selectFile" text="..." textAlignment="CENTER" />
                     <padding>
                         <Insets right="20.0" />
                     </padding>
@@ -60,9 +60,12 @@
             <Region HBox.hgrow="ALWAYS" />
             <Button fx:id="patchButton" defaultButton="true" mnemonicParsing="false" onAction="#patchOrUnpatch" text="Patch">
                 <HBox.margin>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    <Insets bottom="12.0" left="10.0" right="12.0" top="10.0" />
                 </HBox.margin>
             </Button>
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
         </HBox>
     </bottom>
 </BorderPane>
