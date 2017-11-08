@@ -29,7 +29,7 @@ public final class FileUtils {
 
 	public static String hashFile(Path path) {
 		if (path == null) return "";
-		if (!Files.exists(path)) return "";
+		if (!Files.isRegularFile(path)) return "";
 
 		try {
 			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
