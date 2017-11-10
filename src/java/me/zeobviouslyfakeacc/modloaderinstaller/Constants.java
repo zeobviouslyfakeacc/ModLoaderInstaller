@@ -6,7 +6,7 @@ public final class Constants {
 		throw new Error("No instances!");
 	}
 
-	public static final String TLD_VERSION = "v1.12";
+	public static final String TLD_VERSION = "v1.15";
 	public static final String DLL_NAME = "Rewired_Core.dll";
 	public static final String XOR_NAME = "Rewired_Core.xor";
 	public static final long UNPATCHED_SIZE = 1418752L;
