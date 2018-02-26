@@ -15,6 +15,8 @@ namespace ModLoader {
 		public static void Start() {
 			// Patch in Mod Loader helpers
 			HarmonyInstance.Create("Mod Loader").PatchAll(Assembly.GetExecutingAssembly());
+			// And manually call the only OnLoad method
+			DisableUnityTracking.OnLoad();
 
 			// Load mods
 			DirectoryInfo modsDir = GetModsDirectory();
@@ -107,7 +109,7 @@ namespace ModLoader {
 						string message = "OnLoad method failed for type " + type.FullName + " of mod " + modAssembly.GetName().Name;
 						Debug.LogError(message);
 						Debug.LogException(e);
-						throw new ModLoadingException(message + ExceptionToString(e));
+						throw new ModLoadingException(message + ":\n" + ExceptionToString(e));
 					}
 				}
 			}
@@ -127,7 +129,7 @@ namespace ModLoader {
 		}
 
 		private static string BuildMessage(String baseMessage, List<String> mods) {
-			return baseMessage + "\n" + String.Join("\n", mods.ToArray());
+			return baseMessage + "\n- " + String.Join("\n- ", mods.ToArray());
 		}
 	}
 }

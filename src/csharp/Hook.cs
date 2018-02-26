@@ -3,6 +3,8 @@ using System.Reflection;
 using System.IO;
 using UnityEngine;
 
+// Remember to add a reference to UnityEngine.CoreModule.dll
+
 namespace Rewired
 {
 	public class InputManager_Base
@@ -27,6 +29,7 @@ namespace Rewired
 				Debug.LogException(e);
 			}
 			// COPY END
+			this.Initialize();
 		}
 	}
 }
