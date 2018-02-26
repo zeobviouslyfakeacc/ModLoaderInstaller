@@ -35,15 +35,19 @@ public class MainPanel {
 
 	public final Property<Path> selectedFile = new SimpleObjectProperty<>(null);
 	public final Property<FileStatus> fileStatusProperty = new SimpleObjectProperty<>(FileStatus.NO_FILE);
+	public final ObjectBinding<FileStatus> fileStatusBinding = Bindings.createObjectBinding(this::calculateHashes, selectedFile);
 	public final BooleanProperty working = new SimpleBooleanProperty(false);
 
-	public TextField fileTextField;
+	public TextField exePathTextField;
+	public TextField dllPathTextField;
+
 	public Button fileSelectButton;
+	public Button patchButton;
+
+	public Label instructionsLabel;
+	public Label fileSelectLabel;
 	public Label fileStatusLabel;
 	public Label progressStatusLabel;
-	public Button patchButton;
-	public Label instructionsLabel;
-	public ObjectBinding<FileStatus> fileStatusBinding;
 
 	@FXML
 	private void initialize() {
@@ -52,16 +56,18 @@ public class MainPanel {
 				.replace("${version}", TLD_VERSION)
 				.replace("${exe_path}", OPERATING_SYSTEM.getExampleExecutablePath())
 				.replace("${dll_name}", DLL_NAME));
+		// ... and in the tld executable selection label
+		fileSelectLabel.setText(fileSelectLabel.getText()
+				.replace("${exe_name}", OPERATING_SYSTEM.getExecutableName()));
 
 		// Selected file depends on the path in the text field
 		// Not bound the "traditional" way as that caused duplicate calls to createPathFromText
-		fileTextField.setOnKeyReleased(ke -> selectedFile.setValue(createPathFromText(fileTextField.getText())));
+		dllPathTextField.textProperty().addListener((o) -> createPathFromText());
 
 		// Only able to change file path when not currently patching
-		fileTextField.disableProperty().bind(working);
+		dllPathTextField.disableProperty().bind(working);
 
 		// File status depends on selected file
-		fileStatusBinding = Bindings.createObjectBinding(this::calculateHashes, selectedFile);
 		fileStatusProperty.bind(fileStatusBinding);
 
 		// File status label responds to selected file status
@@ -81,29 +87,6 @@ public class MainPanel {
 				() -> fileStatusProperty.getValue().getButtonText(), fileStatusProperty));
 	}
 
-	private static Path createPathFromText(String text) {
-		if (text == null || text.isEmpty()) return null;
-		if (text.startsWith("\"") && text.endsWith("\"")) text = text.substring(1, text.length() - 1);
-		if (!text.endsWith(DLL_NAME)) return null;
-
-		try {
-			Path path = Paths.get(text);
-			if (!Files.isRegularFile(path)) {
-				error("Read error", "The DLL file you selected cannot be found.");
-				return null;
-			} else if (!Files.isReadable(path) || !Files.isWritable(path)) {
-				error("Read error", "The DLL file you selected cannot be read from or written to.\n\n" +
-						"Make sure that the file is not marked read-only and\n" +
-						"that you have the required permissions to write to it.");
-				return null;
-			}
-
-			return path;
-		} catch (InvalidPathException ipe) {
-			return null;
-		}
-	}
-
 	private FileStatus calculateHashes() {
 		Path path = selectedFile.getValue();
 		if (path == null) return FileStatus.NO_FILE;
@@ -113,35 +96,70 @@ public class MainPanel {
 		return FileStatus.forHashes(dllHash, modLoaderHash);
 	}
 
+	private void createPathFromText() {
+		if (!dllPathTextField.isFocused()) return;
+
+		String text = dllPathTextField.getText();
+		progressStatusLabel.setText("");
+		exePathTextField.setText("");
+		selectedFile.setValue(null);
+
+		if (text.startsWith("\"") && text.endsWith("\"")) text = text.substring(1, text.length() - 1);
+		if (!text.endsWith(DLL_NAME)) return;
+
+		try {
+			Path path = Paths.get(text);
+			if (!Files.isRegularFile(path)) {
+				progressStatusLabel.setText("Could not find DLL file");
+				return;
+			} else if (!Files.isReadable(path) || !Files.isWritable(path)) {
+				error("Read error", "The DLL file you selected cannot be read from or written to.\n\n" +
+						"Make sure that the file is not marked read-only and\n" +
+						"that you have the required permissions to write to it.");
+				return;
+			}
+
+			selectedFile.setValue(path);
+		} catch (InvalidPathException ipe) {
+			progressStatusLabel.setText("Invalid path");
+		}
+	}
+
 	public void selectFile() {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Select \"" + OPERATING_SYSTEM.getExecutableName() + "\" or \"" + DLL_NAME + "\"");
+		fileChooser.setTitle("Select \"" + OPERATING_SYSTEM.getExecutableName() + "\"");
 		ExtensionFilter exeFilter = new ExtensionFilter("TLD Executable", OPERATING_SYSTEM.getExtensionFilter());
 		fileChooser.getExtensionFilters().add(exeFilter);
 		ExtensionFilter dllFilter = new ExtensionFilter(DLL_NAME, DLL_NAME);
 		fileChooser.getExtensionFilters().add(dllFilter);
 		fileChooser.setSelectedExtensionFilter(exeFilter);
 
-		File selected = fileChooser.showOpenDialog(null);
+		Window window = fileSelectButton.getScene().getWindow();
+		File selected = fileChooser.showOpenDialog(window);
 		if (selected == null || !selected.exists()) return;
 
+		Path executablePath;
 		Path dllPath;
 		if (DLL_NAME.equals(selected.getName())) {
+			executablePath = null;
 			dllPath = selected.toPath();
 		} else {
-			Path executablePath = selected.toPath();
+			executablePath = selected.toPath();
 			dllPath = OPERATING_SYSTEM.getDLLPath(executablePath);
-
-			if (!Files.isRegularFile(dllPath)) {
-				selectedFile.setValue(null);
-				error("File error", "Expected the file \"" + DLL_NAME + "\" at path \n\"" + dllPath + "\",\n" +
-						"but no such file was present.");
-				return;
-			}
 		}
 
-		fileTextField.setText(dllPath.toString());
-		selectedFile.setValue(dllPath);
+		progressStatusLabel.setText("");
+		exePathTextField.setText(executablePath != null ? executablePath.toString() : "");
+		dllPathTextField.setText(dllPath.toString());
+
+		if (Files.isRegularFile(dllPath)) {
+			selectedFile.setValue(dllPath);
+			patchButton.requestFocus();
+		} else {
+			selectedFile.setValue(null);
+			error("File error", "Expected the file \"" + DLL_NAME + "\" at path \n\"" + dllPath + "\",\n" +
+					"but no such file was present.");
+		}
 	}
 
 	public void patchOrUnpatch() {

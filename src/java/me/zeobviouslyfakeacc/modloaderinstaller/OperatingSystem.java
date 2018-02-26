@@ -17,7 +17,7 @@ public enum OperatingSystem {
 
 		@Override
 		public String getExampleExecutablePath() {
-			return "C:\\Program Files\\Steam\\SteamApps\\common\\TheLongDark\\";
+			return "C:\\Program Files\\Steam\\SteamApps\\common\\TheLongDark";
 		}
 	},
 
@@ -34,7 +34,7 @@ public enum OperatingSystem {
 
 		@Override
 		public String getExampleExecutablePath() {
-			return "~/Library/Application Support/Steam/SteamApps/common/TheLongDark/";
+			return "~/Library/Application Support/Steam/SteamApps/common/TheLongDark";
 		}
 	},
 
@@ -51,7 +51,7 @@ public enum OperatingSystem {
 
 		@Override
 		public String getExampleExecutablePath() {
-			return "~/.steam/steam/steamapps/common/TheLongDark/";
+			return "~/.steam/steam/steamapps/common/TheLongDark";
 		}
 
 		@Override
