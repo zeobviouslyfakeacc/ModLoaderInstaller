@@ -12,7 +12,6 @@ namespace ModLoader {
 
 		private static void Postfix() {
 			GameManager.m_GameVersionString = "Modded " + GameManager.m_GameVersionString;
-			Debug.Log(" === This game is MODDED. Do not report any issues to Hinterland! === ");
 		}
 	}
 
@@ -58,6 +57,8 @@ namespace ModLoader {
 	internal static class DisableUnityTracking {
 
 		public static void OnLoad() {
+			Debug.Log(" === This game is MODDED. Do not report any issues to Hinterland! === ");
+
 			try {
 				CrashReportHandler.enableCaptureExceptions = false;
 				Analytics.enabled = false;
@@ -67,8 +68,9 @@ namespace ModLoader {
 				Assembly unityConnectModule = typeof(RemoteSettings).Assembly;
 				SetInternalProperty(unityConnectModule, "UnityEngine.Connect.UnityConnectSettings", "enabled", false);
 				SetInternalProperty(unityConnectModule, "UnityEngine.Advertisements.UnityAdsSettings", "enabled", false);
-			} catch {
+			} catch (Exception ex) {
 				Debug.LogError("Could not disable player tracking.");
+				Debug.LogException(ex);
 			}
 		}
 

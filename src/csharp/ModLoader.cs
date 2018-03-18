@@ -13,10 +13,10 @@ namespace ModLoader {
 		internal static bool HasFailed => failureMessage != "";
 
 		public static void Start() {
-			// Patch in Mod Loader helpers
-			HarmonyInstance.Create("Mod Loader").PatchAll(Assembly.GetExecutingAssembly());
-			// And manually call the only OnLoad method
+			// First of all, disable error reporting and tracking
 			DisableUnityTracking.OnLoad();
+			// Then patch in Mod Loader helpers
+			HarmonyInstance.Create("Mod Loader").PatchAll(Assembly.GetExecutingAssembly());
 
 			// Load mods
 			DirectoryInfo modsDir = GetModsDirectory();
@@ -85,6 +85,12 @@ namespace ModLoader {
 					failedMods.Add(modAssembly.GetName() + ExceptionToString(e));
 					Debug.LogError("Patching mod " + modAssembly.GetName() + " failed!");
 					Debug.LogException(e);
+
+					if (e is ReflectionTypeLoadException rtle && rtle.LoaderExceptions != null) {
+						foreach (Exception loaderException in rtle.LoaderExceptions) {
+							Debug.LogException(loaderException);
+						}
+					}
 				}
 			}
 

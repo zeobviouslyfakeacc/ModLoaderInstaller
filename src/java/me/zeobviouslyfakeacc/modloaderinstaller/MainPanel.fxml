@@ -5,6 +5,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.zeobviouslyfakeacc.modloaderinstaller.MainPanel">
+    <top>
+        <Label alignment="CENTER" style="-fx-underline: true;" text="Mod Loader Installer" textAlignment="CENTER" BorderPane.alignment="CENTER_LEFT">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" top="10.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
     <center>
         <VBox spacing="10.0" style="-fx-background-color: white;">
             <Label fx:id="instructionsLabel" text="Tested with The Long Dark ${version}, but may also work for newer versions.&#10;&#10;To get started, press the button to select the TLD executable&#10;(for example at ${exe_path}),&#10;or manually enter the path to ${dll_name} (not recommended)." />
@@ -51,14 +61,4 @@
             </Button>
         </HBox>
     </bottom>
-    <top>
-        <Label alignment="CENTER" style="-fx-underline: true;" text="Mod Loader Installer" textAlignment="CENTER" BorderPane.alignment="CENTER_LEFT">
-            <font>
-                <Font name="System Bold" size="20.0" />
-            </font>
-            <BorderPane.margin>
-                <Insets bottom="10.0" left="10.0" top="10.0" />
-            </BorderPane.margin>
-        </Label>
-    </top>
 </BorderPane>
