@@ -6,13 +6,13 @@ public final class Constants {
 		throw new Error("No instances!");
 	}
 
-	public static final String TLD_VERSION = "v1.15";
+	public static final String TLD_VERSION = "v1.27";
 	public static final String DLL_NAME = "Rewired_Core.dll";
 	public static final String XOR_NAME = "Rewired_Core.xor";
-	public static final long UNPATCHED_SIZE = 1418752L;
-	public static final long PATCHED_SIZE = 1418752L;
-	public static final String UNPATCHED_SHA1 = "77e4ea76ec93d357bf9272363700b9c92c99e9e";
-	public static final String PATCHED_SHA1 = "ad73dc36f160f9e85f77e8a86d7f64e09e22a2a4";
-	public static final String MOD_LOADER_SHA1 = "2185fe8c6b7a97002ce5fb574772544b629b78c1";
+	public static final long UNPATCHED_SIZE = 1861632L;
+	public static final long PATCHED_SIZE = 1862144L;
+	public static final String UNPATCHED_SHA1 = "e2864e453b70b1e61ddf2f6382a49d9432701e1f";
+	public static final String PATCHED_SHA1 = "e7d8a1c4ba2fc78bfd737a58d62466436af09854";
+	public static final String MOD_LOADER_SHA1 = "75751832efb204e0cb2a1abcb69b18c80b11d5a4";
 	public static final String ERROR_SHA1 = "- ERROR -";
 }

@@ -35,7 +35,7 @@ public final class FileUtils {
 			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
 			byte[] rawBytes = Files.readAllBytes(path);
 			byte[] hash = sha1.digest(rawBytes);
-			return new BigInteger(1, hash).toString(16);
+			return String.format("%040x", new BigInteger(1, hash));
 		} catch (IOException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
