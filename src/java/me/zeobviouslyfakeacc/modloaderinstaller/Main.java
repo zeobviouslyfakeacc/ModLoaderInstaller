@@ -9,6 +9,14 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+	public static void main(String[] args) {
+		if (OperatingSystem.getCurrent() == OperatingSystem.LINUX) {
+			System.setProperty("prism.lcdtext", "false");
+		}
+
+		Application.launch(Main.class, args);
+	}
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(Main.class.getResource("MainPanel.fxml"));
