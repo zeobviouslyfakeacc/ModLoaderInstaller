@@ -39,6 +39,9 @@ please report your findings - whether it be successful or not - to the
 
 **Installing mods:**
 
+- It is **strongly recommended** that you use [WulfMarius's Mod-Installer](https://github.com/WulfMarius/Mod-Installer/releases) to automatically install and manage your mods.
+
+Manual installation: *(Not recommended)*
 - Add the mod's DLL file(s) to the directory called  
   `<Steam>/SteamApps/common/TheLongDark/mods`,  
   which the installer program should've already created.
