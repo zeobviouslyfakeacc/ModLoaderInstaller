@@ -1,8 +1,8 @@
 .idea
 .vs
+bin
 obj
-out
+target
 test
-packages
 *.iml
 *.user

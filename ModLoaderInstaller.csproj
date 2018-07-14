@@ -43,16 +43,16 @@
     <Reference Include="UnityEngine.UnityConnectModule" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\csharp\AssemblyInfo.cs" />
-    <Compile Include="src\csharp\DependencyGraph.cs" />
-    <Compile Include="src\csharp\ModLoader.cs" />
-    <Compile Include="src\csharp\Patches.cs" />
+    <Compile Include="src\main\csharp\AssemblyInfo.cs" />
+    <Compile Include="src\main\csharp\DependencyGraph.cs" />
+    <Compile Include="src\main\csharp\ModLoader.cs" />
+    <Compile Include="src\main\csharp\Patches.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "$(ProjectDir)\resources\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "$(ProjectDir)\src\main\resources\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

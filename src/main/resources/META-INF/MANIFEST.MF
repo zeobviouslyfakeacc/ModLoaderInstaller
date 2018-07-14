@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Main-Class: me.zeobviouslyfakeacc.modloaderinstaller.Main
+Implementation-Title: ${project.name}
+Implementation-Vendor: zeobviouslyfakeacc
+Implementation-Version: ${project.version}
+Built-By: zeobviouslyfakeacc
+JavaFX-Version: 8.0
+Permissions: sandbox
