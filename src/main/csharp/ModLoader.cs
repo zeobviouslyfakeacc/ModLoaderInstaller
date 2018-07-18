@@ -9,14 +9,26 @@ namespace ModLoader {
 
 	public class ModLoader {
 
-		internal static string failureMessage = "";
-		internal static bool HasFailed => failureMessage != "";
+		private static string failureMessage = "";
+		internal static bool HasFailed() => failureMessage != "";
+		internal static bool HasFailed(out string message) {
+			message = failureMessage;
+			return message != "";
+		}
+
+		private static string updateVersion = "";
+		internal static bool HasUpdate(out string version) {
+			version = updateVersion;
+			return version != "";
+		}
 
 		public static void Start() {
 			// First of all, disable error reporting and tracking
 			DisableUnityTracking.OnLoad();
 			// Then patch in Mod Loader helpers
 			HarmonyInstance.Create("Mod Loader").PatchAll(Assembly.GetExecutingAssembly());
+			// Start the mod loader update check in the background
+			UpdateChecker updateChecker = new UpdateChecker();
 
 			// Load mods
 			DirectoryInfo modsDir = GetModsDirectory();
@@ -33,6 +45,8 @@ namespace ModLoader {
 			} catch (ModLoadingException mle) {
 				failureMessage = mle.Message;
 			}
+
+			updateVersion = updateChecker.GetUpdateVersion();
 		}
 
 		private static DirectoryInfo GetModsDirectory() {

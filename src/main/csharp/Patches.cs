@@ -19,17 +19,40 @@ namespace ModLoader {
 	internal static class AddFailedModsToVersionLabel {
 
 		private static void Postfix(Panel_MainMenu __instance) {
-			if (!ModLoader.HasFailed)
-				return;
-
 			GameObject gameObject = __instance.m_VersionLabel;
 			UILabel versionLabel = gameObject.GetComponent<UILabel>();
-			versionLabel.color = Color.red;
 			versionLabel.multiLine = true;
 			versionLabel.overflowMethod = UILabel.Overflow.ResizeHeight;
 			versionLabel.width = 1100;
-			versionLabel.text += "\n\n" + ModLoader.failureMessage;
 			versionLabel.depth = int.MaxValue;
+
+			if (ModLoader.HasUpdate(out string version)) {
+				versionLabel.text += "\n\n[url=update]A new version of the Mod Loader is available (v" + version + "). Click here to be taken to the download page.[/url]";
+
+				BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+				collider.center = versionLabel.localCenter;
+				collider.size = versionLabel.localSize;
+
+				OpenLinkInBrowser opener = gameObject.AddComponent<OpenLinkInBrowser>();
+				opener.label = versionLabel;
+			}
+
+			if (ModLoader.HasFailed(out string failureMessage)) {
+				versionLabel.color = Color.red;
+				versionLabel.text += "\n\n" + failureMessage;
+			}
+		}
+
+		private class OpenLinkInBrowser : MonoBehaviour {
+
+			private const string downloadsPageLink = "https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases";
+			internal UILabel label;
+
+			private void OnClick() {
+				if (label.GetUrlAtPosition(UICamera.lastWorldPosition) == "update") {
+					Application.OpenURL(downloadsPageLink);
+				}
+			}
 		}
 	}
 
@@ -41,7 +64,7 @@ namespace ModLoader {
 					.GetValue(InterfaceManager.m_Panel_MainMenu);
 
 			// Skip if mod loading failed and button clicked was Story, Sandbox or Challenge
-			return !(__instance == mainMenu && ModLoader.HasFailed && index < 3);
+			return !(__instance == mainMenu && ModLoader.HasFailed() && index < 3);
 		}
 	}
 

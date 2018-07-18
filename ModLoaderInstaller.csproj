@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine.CoreModule" />
     <Reference Include="UnityEngine.CrashReportingModule" />
+    <Reference Include="UnityEngine.PhysicsModule" />
     <Reference Include="UnityEngine.UnityAnalyticsModule" />
     <Reference Include="UnityEngine.UnityConnectModule" />
   </ItemGroup>
@@ -47,6 +48,7 @@
     <Compile Include="src\main\csharp\DependencyGraph.cs" />
     <Compile Include="src\main\csharp\ModLoader.cs" />
     <Compile Include="src\main\csharp\Patches.cs" />
+    <Compile Include="src\main\csharp\UpdateChecker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>
