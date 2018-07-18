@@ -29,7 +29,7 @@ public class CreatePatch {
 			return;
 		}
 
-		Path resourcesDir = Paths.get("resources");
+		Path resourcesDir = Paths.get("src\\main\\resources");
 		Path outputFile = resourcesDir.resolve(XOR_NAME);
 		Path origFile = managedDir.resolve(DLL_NAME + ".orig");
 		Path patchedFile = managedDir.resolve(DLL_NAME);
