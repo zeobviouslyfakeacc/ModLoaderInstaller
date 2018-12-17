@@ -32,6 +32,7 @@ namespace ModLoader {
 
 			// Load mods
 			DirectoryInfo modsDir = GetModsDirectory();
+			modsDir.Create(); // Does nothing if the directory already exists
 			FileInfo[] files = modsDir.GetFiles("*.dll");
 
 			try {
