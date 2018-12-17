@@ -88,13 +88,23 @@ namespace ModLoader {
 				Analytics.deviceStatsEnabled = false;
 				Analytics.limitUserTracking = true;
 
-				Assembly unityConnectModule = typeof(RemoteSettings).Assembly;
+				Assembly unityConnectModule = GetUnityConnectAssembly();
 				SetInternalProperty(unityConnectModule, "UnityEngine.Connect.UnityConnectSettings", "enabled", false);
 				SetInternalProperty(unityConnectModule, "UnityEngine.Advertisements.UnityAdsSettings", "enabled", false);
 			} catch (Exception ex) {
 				Debug.LogError("Could not disable player tracking.");
 				Debug.LogException(ex);
 			}
+		}
+
+		private static Assembly GetUnityConnectAssembly() {
+			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			foreach (Assembly assembly in assemblies) {
+				if (assembly.GetName().Name == "UnityEngine.UnityConnectModule") {
+					return assembly;
+				}
+			}
+			throw new Exception("Could not find the UnityConnectModule Assembly.");
 		}
 
 		private static void SetInternalProperty(Assembly assembly, string className, string propertyName, object value) {
