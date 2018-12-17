@@ -1,6 +1,12 @@
 ﻿using System;
-using System.Reflection;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Reflection;
+using Rewired.Config;
+using Rewired.Data;
+using Rewired.Platforms;
+using Rewired.Utils.Interfaces;
 using UnityEngine;
 
 // Remember to add a reference to UnityEngine.CoreModule.dll
@@ -16,7 +22,7 @@ namespace Rewired
 			{
 				string managedPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 				Debug.Log("Loading Harmony...");
-				Assembly harmonyAssembly = Assembly.LoadFrom(Path.Combine(managedPath, "Harmony.dll"));
+				Assembly harmonyAssembly = Assembly.LoadFrom(Path.Combine(managedPath, "0Harmony.dll"));
 				Debug.Log("Loading mod loader...");
 				Assembly modLoaderAssembly = Assembly.LoadFrom(Path.Combine(managedPath, "ModLoader.dll"));
 				Type modLoaderType = modLoaderAssembly.GetType("ModLoader.ModLoader", true);

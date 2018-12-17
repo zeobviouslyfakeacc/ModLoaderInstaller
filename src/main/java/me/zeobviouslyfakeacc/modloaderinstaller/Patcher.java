@@ -67,14 +67,17 @@ public class Patcher extends Task<Void> {
 		Path modLoaderFile = path.resolveSibling("ModLoader.dll");
 		copyResource("/ModLoader.dll", modLoaderFile);
 
-		Path harmonyFile = path.resolveSibling("Harmony.dll");
-		copyResource("/Harmony.dll", harmonyFile);
+		Path harmonyFile = path.resolveSibling("0Harmony.dll");
+		copyResource("/0Harmony.dll", harmonyFile);
 
 		Path modsDir = OperatingSystem.getCurrent().getModsDirectory(path);
 		Files.createDirectories(modsDir);
 
 		Path oldDefaultMod = modsDir.resolve("AddModdedToVersionString.dll");
 		Files.deleteIfExists(oldDefaultMod);
+
+		Path oldHarmonyFile = path.resolveSibling("Harmony.dll");
+		Files.deleteIfExists(oldHarmonyFile);
 	}
 
 	private static void copyResource(String resource, Path targetPath) throws IOException {

@@ -61,7 +61,7 @@ Manual installation: *(Not recommended)*
 - Open the project settings and set the compilation target to **.NET Framework 3.5** or lower
 - Add the following files from `<Steam>/SteamApps/common/TheLongDark/tld_Data/Managed/` as dependencies:
   - `Assembly-CSharp.dll`
-  - `Harmony.dll`
+  - `0Harmony.dll`
   - `UnityEngine.CoreModule.dll`
   - You may also need other UnityEngine DLLs in some occasions
 - Follow the instructions in the [Harmony wiki](https://github.com/pardeike/Harmony/wiki) on how to patch existing methods
