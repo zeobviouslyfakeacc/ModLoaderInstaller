@@ -18,26 +18,54 @@ please report your findings - whether it be successful or not - to the
 
 ## Installation instructions
 
-### For users
+#### Windows (64-bit):
 
-**Installing the tool:**
-
-- **Download** the latest release from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases)
-  - This is a JavaFX 8 application. **Make sure you have installed Java 8** or newer.  
-    **Linux users** might have to install the `openjfx` package if they're using the OpenJDK distribution
-- **Run** the Java application  
-  **Windows users** can usually just double click the JAR file  
-  **Linux users** may need to use `java -jar ModLoaderInstaller.jar`
-- Select TLD's executable file:
-  - Windows: `<Steam>/SteamApps/common/TheLongDark/tld.exe`
-  - Linux: `~/.steam/steam/steamapps/common/TheLongDark/tld.x86` (or `.x86_64`, either works)
-  - MacOS: `~/Library/Application Support/Steam/steamapps/common/TheLongDark/tld.app`
+- **Download** `ModLoaderInstaller-Windows-x64.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
+- **Extract** the entire ZIP archive
+- **Run** `ModLoaderInstaller.exe` by double-clicking the file.
+- Select TLD's **executable file** (e.g. at `C:\Program Files (x86)\Steam\SteamApps\common\TheLongDark\tld.exe`)
 - Check that the "file status" label now says `Valid, unpatched` or `Valid, outdated`
 - Press the "Patch" or "Update" button
 - If the text in the lower left corner says "Done!", the mod loader has been installed correctly.  
   If it doesn't, please create an issue on the [issues page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/issues)!
 
-**Installing mods:**
+#### MacOS:
+
+- **Download** `ModLoaderInstaller-Mac.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
+- **Extract** the entire ZIP archive
+- **Run** `ModLoaderInstaller-Mac` by double-clicking the file.
+- Select TLD's **executable file** (usually at `~/Library/Application Support/Steam/steamapps/common/TheLongDark/tld.app`)
+- Check that the "file status" label now says `Valid, unpatched` or `Valid, outdated`
+- Press the "Patch" or "Update" button
+- If the text in the lower left corner says "Done!", the mod loader has been installed correctly.  
+  If it doesn't, please create an issue on the [issues page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/issues)!
+
+#### Linux (64-bit):
+
+- **Download** `ModLoaderInstaller-Linux-x64.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
+- Open a terminal in your downloads folder and run these commands:
+  - `unzip ModLoaderInstaller-Linux-x64.zip`
+  - `cd ModLoaderInstaller-Linux-x64/`
+  - `chmod +x ModLoaderInstaller`
+  - `./ModLoaderInstaller`
+- Select TLD's **executable file** (usually at `~/.steam/steam/steamapps/common/TheLongDark/tld.x86`)
+- Check that the "file status" label now says `Valid, unpatched` or `Valid, outdated`
+- Press the "Patch" or "Update" button
+- If the text in the lower left corner says "Done!", the mod loader has been installed correctly.  
+  If it doesn't, please create an issue on the [issues page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/issues)!
+
+#### 32-bit operating systems / other
+
+- **Download** `ModLoaderInstaller.jar` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
+- Make sure a Java 8 runtime that includes JavaFX is installed (e.g. [Amazon Corretto 8](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html))
+- Run `java -jar ModLoaderInstaller.jar`
+- Select TLD's **executable file**
+- Check that the "file status" label now says `Valid, unpatched` or `Valid, outdated`
+- Press the "Patch" or "Update" button
+- If the text in the lower left corner says "Done!", the mod loader has been installed correctly.  
+  If it doesn't, please create an issue on the [issues page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/issues)!
+
+### Installing mods:
 
 - It is **strongly recommended** that you use [WulfMarius's Mod-Installer](https://github.com/WulfMarius/Mod-Installer/releases) to automatically install and manage your mods.
 
@@ -46,7 +74,7 @@ Manual installation: *(Not recommended)*
   `<Steam>/SteamApps/common/TheLongDark/mods`,  
   which the installer program should've already created.
 
-**Troubleshooting:**
+### Troubleshooting:
 
 - If the installer doesn't let you patch `Rewired_Core.dll` because it says the file is `Invalid`,  
   you'll need to restore the original DLL file:
