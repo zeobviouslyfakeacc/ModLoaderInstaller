@@ -1,0 +1,45 @@
+{
+	"reduce": [
+		{
+			"archive": "jre/lib/rt.jar",
+			"paths": [
+				"com/sun/corba",
+				"com/sun/jndi",
+				"com/sun/media",
+				"com/sun/naming",
+				"com/sun/rowset",
+				"sun/applet",
+				"sun/corba",
+				"sun/management"
+			]
+		}
+	],
+	"remove": [
+		{
+			"platform": "*",
+			"paths": [
+				"jre/lib/rhino.jar"
+			]
+		},
+		{
+			"platform": "windows",
+			"paths": [
+				"jre/bin/*.exe",
+				"jre/bin/client",
+				"jre/bin/jfxwebkit.dll"
+			]
+		},
+		{
+			"platform": "linux",
+			"paths": [
+				"jre/lib/amd64/libjfxwebkit.so"
+			]
+		},
+		{
+			"platform": "mac",
+			"paths": [
+				"jre/lib/libjfxwebkit.dylib"
+			]
+		}
+	]
+}

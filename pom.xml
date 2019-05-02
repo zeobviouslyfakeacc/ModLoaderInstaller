@@ -12,6 +12,27 @@
     <name>TLD Mod Loader Installer</name>
     <url>https://github.com/zeobviouslyfakeacc/ModLoaderInstaller</url>
 
+    <properties>
+        <main.class>me.zeobviouslyfakeacc.modloaderinstaller.Main</main.class>
+        <jdk.directory>${project.build.directory}/jdks</jdk.directory>
+        <jdk.download.win64>https://download.bell-sw.com/java/8u212/bellsoft-jdk8u212-windows-amd64.zip</jdk.download.win64>
+        <jdk.download.mac>https://download.bell-sw.com/java/8u212/bellsoft-jdk8u212-macos-amd64.zip</jdk.download.mac>
+        <jdk.download.linux64>https://download.bell-sw.com/java/8u212/bellsoft-jdk8u212-linux-amd64.tar.gz</jdk.download.linux64>
+        <binary.output.win64>${project.build.finalName}-Windows-x64</binary.output.win64>
+        <binary.output.mac>${project.build.finalName}-Mac</binary.output.mac>
+        <binary.output.linux64>${project.build.finalName}-Linux-x64</binary.output.linux64>
+    </properties>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>packr-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <finalName>ModLoaderInstaller</finalName>
 
@@ -66,6 +87,24 @@
                 <configuration>
                     <encoding>utf-8</encoding>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>prepare-packr-scripts</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>packr</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/packr</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -76,6 +115,106 @@
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.badlogicgames.packr</groupId>
+                        <artifactId>packr</artifactId>
+                        <version>2.1-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <includePluginDependencies>true</includePluginDependencies>
+                    <mainClass>com.badlogicgames.packr.Packr</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>win64</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>${project.build.directory}/packr/packr-config-win64.json</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>mac</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>${project.build.directory}/packr/packr-config-mac.json</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>linux64</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>${project.build.directory}/packr/packr-config-linux64.json</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>prepare-jdks</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${jdk.directory}" />
+                                <echo message="Downloading JDKs" />
+                                <get src="${jdk.download.win64}" dest="${jdk.directory}/jdk-win64.zip" skipexisting="true" />
+                                <get src="${jdk.download.mac}" dest="${jdk.directory}/jdk-mac.zip" skipexisting="true" />
+                                <get src="${jdk.download.linux64}" dest="${jdk.directory}/jdk-linux64.tar.gz" skipexisting="true" />
+                                <echo message="Extracting JDKs" />
+                                <unzip src="${jdk.directory}/jdk-win64.zip" dest="${jdk.directory}/jdk-win64" overwrite="false" />
+                                <unzip src="${jdk.directory}/jdk-mac.zip" dest="${jdk.directory}/jdk-mac" overwrite="false" />
+                                <untar src="${jdk.directory}/jdk-linux64.tar.gz" dest="${jdk.directory}/jdk-linux64" compression="gzip" overwrite="false" />
+                                <echo message="Creating minimized directories" />
+                                <mkdir dir="${jdk.directory}/jdk-win64-minimized" />
+                                <mkdir dir="${jdk.directory}/jdk-mac-minimized" />
+                                <mkdir dir="${jdk.directory}/jdk-linux64-minimized" />
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>zip-native-builds</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="Zipping built native binaries" />
+                                <zip basedir="${project.build.directory}" includes="${binary.output.win64}/**" destfile="${project.build.directory}/${binary.output.win64}.zip" />
+                                <zip basedir="${project.build.directory}" includes="${binary.output.mac}.app/**" destfile="${project.build.directory}/${binary.output.mac}.zip" />
+                                <zip basedir="${project.build.directory}" includes="${binary.output.linux64}/**" destfile="${project.build.directory}/${binary.output.linux64}.zip" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

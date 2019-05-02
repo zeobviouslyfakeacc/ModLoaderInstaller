@@ -1,0 +1,12 @@
+{
+	"platform": "windows64",
+	"jdk": "${jdk.directory}/jdk-win64",
+	"minimizejre": "${project.build.directory}/packr/minimize-soft-without-webkit",
+	"executable": "${project.build.finalName}",
+	"classpath": [
+		"${project.build.directory}/${project.build.finalName}.jar"
+	],
+	"mainclass": "${main.class}",
+	"output": "${project.build.directory}/${binary.output.win64}",
+	"cachejre": "${jdk.directory}/jdk-win64-minimized"
+}

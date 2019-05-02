@@ -1,0 +1,13 @@
+{
+	"platform": "mac",
+	"jdk": "${jdk.directory}/jdk-mac",
+	"minimizejre": "${project.build.directory}/packr/minimize-soft-without-webkit",
+	"executable": "${project.build.finalName}",
+	"classpath": [
+		"${project.build.directory}/${project.build.finalName}.jar"
+	],
+	"mainclass": "${main.class}",
+	"output": "${project.build.directory}/${binary.output.mac}.app",
+	"cachejre": "${jdk.directory}/jdk-mac-minimized",
+	"bundle": "${project.groupId}"
+}
