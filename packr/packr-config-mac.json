@@ -7,7 +7,7 @@
 		"${project.build.directory}/${project.build.finalName}.jar"
 	],
 	"mainclass": "${main.class}",
-	"output": "${project.build.directory}/${binary.output.mac}.app",
+	"output": "${project.build.directory}/${binary.output.mac}",
 	"cachejre": "${jdk.directory}/jdk-mac-minimized",
 	"bundle": "${project.groupId}"
 }

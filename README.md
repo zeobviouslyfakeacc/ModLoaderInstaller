@@ -42,12 +42,11 @@ please report your findings - whether it be successful or not - to the
 
 #### Linux (64-bit):
 
-- **Download** `ModLoaderInstaller-Linux-x64.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
-- Open a terminal in your downloads folder and run these commands:
-  - `unzip ModLoaderInstaller-Linux-x64.zip`
-  - `cd ModLoaderInstaller-Linux-x64/`
-  - `chmod +x ModLoaderInstaller`
-  - `./ModLoaderInstaller`
+- **Download** `ModLoaderInstaller-Linux-x64.tar.gz` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
+- Open a terminal in your downloads folder and run the following command:
+```
+tar xf ModLoaderInstaller-Linux-x64.tar.gz && ./ModLoaderInstaller/ModLoaderInstaller
+```
 - Select TLD's **executable file** (usually at `~/.steam/steam/steamapps/common/TheLongDark/tld.x86`)
 - Check that the "file status" label now says `Valid, unpatched` or `Valid, outdated`
 - Press the "Patch" or "Update" button

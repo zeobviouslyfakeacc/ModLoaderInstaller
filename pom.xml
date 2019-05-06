@@ -208,9 +208,17 @@
                         <configuration>
                             <target>
                                 <echo message="Zipping built native binaries" />
-                                <zip basedir="${project.build.directory}" includes="${binary.output.win64}/**" destfile="${project.build.directory}/${binary.output.win64}.zip" />
-                                <zip basedir="${project.build.directory}" includes="${binary.output.mac}.app/**" destfile="${project.build.directory}/${binary.output.mac}.zip" />
-                                <zip basedir="${project.build.directory}" includes="${binary.output.linux64}/**" destfile="${project.build.directory}/${binary.output.linux64}.zip" />
+                                <zip destfile="${project.build.directory}/${binary.output.win64}.zip">
+                                    <zipfileset dir="${project.build.directory}/${binary.output.win64}" prefix="${project.build.finalName}" />
+                                </zip>
+                                <zip destfile="${project.build.directory}/${binary.output.mac}.zip">
+                                    <zipfileset dir="${project.build.directory}/${binary.output.mac}" prefix="${project.build.finalName}.app" filemode="755" includes="Contents/MacOS/ModLoaderInstaller" />
+                                    <zipfileset dir="${project.build.directory}/${binary.output.mac}" prefix="${project.build.finalName}.app" filemode="644" excludes="Contents/MacOS/ModLoaderInstaller" />
+                                </zip>
+                                <tar destfile="${project.build.directory}/${binary.output.linux64}.tar.gz" compression="gzip">
+                                    <tarfileset dir="${project.build.directory}/${binary.output.linux64}" prefix="${project.build.finalName}" filemode="755" includes="ModLoaderInstaller" />
+                                    <tarfileset dir="${project.build.directory}/${binary.output.linux64}" prefix="${project.build.finalName}" filemode="644" excludes="ModLoaderInstaller" />
+                                </tar>
                             </target>
                         </configuration>
                     </execution>
