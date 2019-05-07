@@ -1,6 +1,7 @@
 package me.zeobviouslyfakeacc.modloaderinstaller;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public enum OperatingSystem {
 
@@ -16,8 +17,8 @@ public enum OperatingSystem {
 		}
 
 		@Override
-		public String getExampleExecutablePath() {
-			return "C:\\Program Files\\Steam\\SteamApps\\common\\TheLongDark";
+		public String getDefaultGamePath() {
+			return "C:\\Program Files (x86)\\Steam\\SteamApps\\common\\TheLongDark";
 		}
 	},
 
@@ -33,7 +34,7 @@ public enum OperatingSystem {
 		}
 
 		@Override
-		public String getExampleExecutablePath() {
+		public String getDefaultGamePath() {
 			return "~/Library/Application Support/Steam/SteamApps/common/TheLongDark";
 		}
 	},
@@ -50,7 +51,7 @@ public enum OperatingSystem {
 		}
 
 		@Override
-		public String getExampleExecutablePath() {
+		public String getDefaultGamePath() {
 			return "~/.steam/steam/steamapps/common/TheLongDark";
 		}
 
@@ -75,7 +76,7 @@ public enum OperatingSystem {
 
 	public abstract String getExecutableName();
 
-	public abstract String getExampleExecutablePath();
+	public abstract String getDefaultGamePath();
 
 	public String[] getExtensionFilter() {
 		return new String[] {getExecutableName()};
@@ -83,6 +84,10 @@ public enum OperatingSystem {
 
 	public Path getDLLPath(Path executablePath) {
 		return executablePath.resolveSibling(getManagedPath()).resolve(Constants.DLL_NAME);
+	}
+
+	public Path getDefaultExecutablePath() {
+		return Paths.get(getDefaultGamePath()).resolve(getExecutableName());
 	}
 
 	public Path getModsDirectory(Path assemblyPath) {

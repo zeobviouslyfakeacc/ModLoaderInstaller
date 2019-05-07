@@ -54,7 +54,7 @@ public class MainPanel {
 		// Replace constants in instructions label
 		instructionsLabel.setText(instructionsLabel.getText()
 				.replace("${version}", TLD_VERSION)
-				.replace("${exe_path}", OPERATING_SYSTEM.getExampleExecutablePath())
+				.replace("${exe_path}", OPERATING_SYSTEM.getDefaultGamePath())
 				.replace("${dll_name}", DLL_NAME));
 		// ... and in the tld executable selection label
 		fileSelectLabel.setText(fileSelectLabel.getText()
@@ -87,6 +87,9 @@ public class MainPanel {
 						.or(working));
 		patchButton.textProperty().bind(Bindings.createStringBinding(
 				() -> fileStatusProperty.getValue().getButtonText(), fileStatusProperty));
+
+		// Attempt to auto-select the "default" DLL location
+		selectDefaultFile();
 	}
 
 	private FileStatus calculateHashes() {
@@ -124,6 +127,19 @@ public class MainPanel {
 			selectedFile.setValue(path);
 		} catch (InvalidPathException ipe) {
 			progressStatusLabel.setText("Invalid path");
+		}
+	}
+
+	private void selectDefaultFile() {
+		Path defaultExePath = OPERATING_SYSTEM.getDefaultExecutablePath();
+		Path defaultDllPath = OPERATING_SYSTEM.getDLLPath(defaultExePath);
+
+		if (Files.isRegularFile(defaultDllPath)) {
+			exePathTextField.setText(defaultExePath.toString());
+			dllPathTextField.setText(defaultDllPath.toString());
+
+			selectedFile.setValue(defaultDllPath);
+			Platform.runLater(() -> patchButton.requestFocus());
 		}
 	}
 
