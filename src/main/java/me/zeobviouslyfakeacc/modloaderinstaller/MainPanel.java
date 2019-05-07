@@ -66,6 +66,8 @@ public class MainPanel {
 
 		// Only able to change file path when not currently patching
 		dllPathTextField.disableProperty().bind(working);
+		exePathTextField.disableProperty().bind(working);
+		fileSelectButton.disableProperty().bind(working);
 
 		// File status depends on selected file
 		fileStatusProperty.bind(fileStatusBinding);
