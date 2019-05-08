@@ -141,6 +141,7 @@ namespace ModLoader {
 		}
 	}
 
+	[Serializable]
 	internal class ModLoadingException : Exception {
 
 		internal ModLoadingException(string message) : base(message) {
