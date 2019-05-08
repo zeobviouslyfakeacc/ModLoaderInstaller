@@ -43,7 +43,7 @@ namespace ModLoader {
 
 		public List<Assembly> TopologicalSort() {
 			int[] unloadedDependencies = new int[vertices.Length];
-			SortedList<String, Vertex> loadableMods = new SortedList<string, Vertex>();
+			SortedList<string, Vertex> loadableMods = new SortedList<string, Vertex>();
 			List<Assembly> loadedMods = new List<Assembly>(vertices.Length);
 
 			// Initialize the directory

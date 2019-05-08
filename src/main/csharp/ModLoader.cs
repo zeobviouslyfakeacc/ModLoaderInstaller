@@ -66,7 +66,7 @@ namespace ModLoader {
 		private static DependencyGraph LoadModAssemblies(FileInfo[] assemblyFiles) {
 			Debug.Log("Loading mod assemblies");
 			List<Assembly> loadedAssemblies = new List<Assembly>();
-			List<String> failedAssemblies = new List<String>();
+			List<string> failedAssemblies = new List<string>();
 
 			foreach (FileInfo file in assemblyFiles) {
 				if (file.Extension != ".dll") // GetFiles filter is too inclusive
@@ -91,7 +91,7 @@ namespace ModLoader {
 
 		private static void ApplyHarmonyPatches(List<Assembly> modAssemblies) {
 			Debug.Log("Applying Harmony patches");
-			List<String> failedMods = new List<String>();
+			List<string> failedMods = new List<string>();
 
 			foreach (Assembly modAssembly in modAssemblies) {
 				try {
@@ -143,14 +143,14 @@ namespace ModLoader {
 
 	internal class ModLoadingException : Exception {
 
-		internal ModLoadingException(String message) : base(message) {
+		internal ModLoadingException(string message) : base(message) {
 		}
 
-		internal ModLoadingException(String baseMessage, List<String> mods) : base(BuildMessage(baseMessage, mods)) {
+		internal ModLoadingException(string baseMessage, List<string> mods) : base(BuildMessage(baseMessage, mods)) {
 		}
 
-		private static string BuildMessage(String baseMessage, List<String> mods) {
-			return baseMessage + "\n- " + String.Join("\n- ", mods.ToArray());
+		private static string BuildMessage(string baseMessage, List<string> mods) {
+			return baseMessage + "\n- " + string.Join("\n- ", mods.ToArray());
 		}
 	}
 }
