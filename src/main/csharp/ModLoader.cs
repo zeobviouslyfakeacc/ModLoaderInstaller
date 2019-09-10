@@ -9,11 +9,12 @@ namespace ModLoader {
 
 	public class ModLoader {
 
-		private static string failureMessage = "";
-		internal static bool HasFailed() => failureMessage != "";
+		private static bool success = false;
+		private static string failureMessage = "An internal mod loader error has occurred. Please check your log file.";
+		internal static bool HasFailed() => !success;
 		internal static bool HasFailed(out string message) {
 			message = failureMessage;
-			return message != "";
+			return !success;
 		}
 
 		private static string updateVersion = "";
@@ -43,6 +44,7 @@ namespace ModLoader {
 				CallOnLoadMethods(sortedAssemblies);
 
 				Debug.Log("All mods successfully loaded!");
+				success = true;
 			} catch (ModLoadingException mle) {
 				failureMessage = mle.Message;
 			}
