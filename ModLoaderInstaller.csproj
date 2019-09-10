@@ -34,16 +34,28 @@
     <RootNamespace>ModLoader</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp" />
-    <Reference Include="0Harmony" />
+    <Reference Include="Assembly-CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.CoreModule" />
-    <Reference Include="UnityEngine.CrashReportingModule" />
-    <Reference Include="UnityEngine.PhysicsModule" />
-    <Reference Include="UnityEngine.UnityAnalyticsModule" />
-    <Reference Include="UnityEngine.UnityConnectModule" />
+    <Reference Include="UnityEngine.CoreModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\main\csharp\AssemblyInfo.cs" />
