@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 
 namespace ModLoader {
@@ -27,17 +28,52 @@ namespace ModLoader {
 			}
 
 			// Add edges
+			SortedDictionary<string, List<string>> modsWithMissingDeps = new SortedDictionary<string, List<string>>();
 			foreach (Vertex modVertex in vertices) {
 				Assembly modAssembly = modVertex.assembly;
+				List<string> missingDependencies = new List<string>();
 
-				foreach (AssemblyName referenced in modAssembly.GetReferencedAssemblies()) {
-					if (nameLookup.TryGetValue(referenced.FullName, out Vertex dependencyVertex)) {
+				foreach (AssemblyName dependency in modAssembly.GetReferencedAssemblies()) {
+					if (nameLookup.TryGetValue(dependency.FullName, out Vertex dependencyVertex)) {
 						modVertex.dependencies.Add(dependencyVertex);
 						dependencyVertex.dependents.Add(modVertex);
-					} else if (referenced.CodeBase != null) {
-						Debug.Log("Dependency " + referenced.FullName + " at " + referenced.CodeBase + " was not a mod");
+					} else if (!TryLoad(dependency)) {
+						Debug.LogError(modAssembly.FullName + " is missing referenced assembly " + dependency.FullName);
+						missingDependencies.Add(dependency.Name + " v" + dependency.Version);
 					}
 				}
+
+				if (missingDependencies.Count > 0) {
+					modsWithMissingDeps.Add(modAssembly.GetName().Name, missingDependencies);
+				}
+			}
+
+			if (modsWithMissingDeps.Count > 0) {
+				// Some mods are missing dependencies, stop mod loading and show error message
+				throw new ModLoadingException(BuildFailureMessage(modsWithMissingDeps));
+			}
+		}
+
+		private static string BuildFailureMessage(SortedDictionary<string, List<string>> modsWithMissingDeps) {
+			StringBuilder messageBuilder = new StringBuilder("Some mods could not be loaded due to missing dependencies which you have to install.\n");
+			foreach (string modName in modsWithMissingDeps.Keys) {
+				messageBuilder.AppendLine("- '" + modName + "' is missing the following dependencies:");
+				foreach (string dependencyName in modsWithMissingDeps[modName]) {
+					messageBuilder.AppendLine("    - " + dependencyName);
+				}
+			}
+			return messageBuilder.ToString();
+		}
+
+		private static bool TryLoad(AssemblyName assembly) {
+			try {
+				Assembly.Load(assembly);
+				return true;
+			} catch (FileNotFoundException) {
+				return false;
+			} catch (Exception ex) {
+				Debug.LogException(ex);
+				throw new ModLoadingException("Unknown exception when loading mod libraries. Please check your log file.");
 			}
 		}
 
