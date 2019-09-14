@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using System;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -26,31 +27,40 @@ namespace ModLoader {
 			versionLabel.width = 1100;
 			versionLabel.depth = int.MaxValue;
 
+			if (ModLoader.HasFailed() && !string.IsNullOrEmpty(Application.consoleLogPath)) {
+				string logFileName = Path.GetFileName(Application.consoleLogPath);
+				versionLabel.text += "  [url=log](Error - click here to open the directory that contains " + logFileName + ")[/url]";
+			}
+
 			if (ModLoader.HasUpdate(out string version)) {
 				versionLabel.text += "\n\n[url=update]A new version of the Mod Loader is available (v" + version + "). Click here to be taken to the download page.[/url]";
-
-				BoxCollider collider = gameObject.AddComponent<BoxCollider>();
-				collider.center = versionLabel.localCenter;
-				collider.size = versionLabel.localSize;
-
-				OpenLinkInBrowser opener = gameObject.AddComponent<OpenLinkInBrowser>();
-				opener.label = versionLabel;
 			}
 
 			if (ModLoader.HasFailed(out string failureMessage)) {
 				versionLabel.color = Color.red;
 				versionLabel.text += "\n\n" + failureMessage;
 			}
+
+			BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+			collider.center = versionLabel.localCenter;
+			collider.size = versionLabel.localSize;
+
+			LinkOpener opener = gameObject.AddComponent<LinkOpener>();
+			opener.label = versionLabel;
 		}
 
-		private class OpenLinkInBrowser : MonoBehaviour {
+		private class LinkOpener : MonoBehaviour {
 
 			private const string downloadsPageLink = "https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases";
 			internal UILabel label;
 
 			private void OnClick() {
-				if (label.GetUrlAtPosition(UICamera.lastWorldPosition) == "update") {
+				string url = label.GetUrlAtPosition(UICamera.lastWorldPosition);
+				if (url == "update") {
 					Application.OpenURL(downloadsPageLink);
+				} else if (url == "log") {
+					string containingDirectory = Path.GetDirectoryName(Application.consoleLogPath);
+					System.Diagnostics.Process.Start(containingDirectory);
 				}
 			}
 		}
