@@ -15,9 +15,9 @@
     <properties>
         <main.class>me.zeobviouslyfakeacc.modloaderinstaller.Main</main.class>
         <jdk.directory>${project.build.directory}/jdks</jdk.directory>
-        <jdk.download.win64>https://download.bell-sw.com/java/8u212/bellsoft-jdk8u212-windows-amd64.zip</jdk.download.win64>
-        <jdk.download.mac>https://download.bell-sw.com/java/8u212/bellsoft-jdk8u212-macos-amd64.zip</jdk.download.mac>
-        <jdk.download.linux64>https://download.bell-sw.com/java/8u212/bellsoft-jdk8u212-linux-amd64.tar.gz</jdk.download.linux64>
+        <jdk.download.win64>https://download.bell-sw.com/java/8u222/bellsoft-jdk8u222-windows-amd64.zip</jdk.download.win64>
+        <jdk.download.mac>https://download.bell-sw.com/java/8u222/bellsoft-jdk8u222-macos-amd64.zip</jdk.download.mac>
+        <jdk.download.linux64>https://download.bell-sw.com/java/8u222/bellsoft-jdk8u222-linux-amd64.tar.gz</jdk.download.linux64>
         <binary.output.win64>${project.build.finalName}-Windows-x64</binary.output.win64>
         <binary.output.mac>${project.build.finalName}-Mac</binary.output.mac>
         <binary.output.linux64>${project.build.finalName}-Linux-x64</binary.output.linux64>
