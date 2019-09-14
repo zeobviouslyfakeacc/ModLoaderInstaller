@@ -87,7 +87,11 @@ public enum OperatingSystem {
 	}
 
 	public Path getDefaultExecutablePath() {
-		return Paths.get(getDefaultGamePath()).resolve(getExecutableName());
+		String gamePath = getDefaultGamePath();
+		if (gamePath.startsWith("~")) {
+			gamePath = System.getProperty("user.home") + gamePath.substring(1);
+		}
+		return Paths.get(gamePath).resolve(getExecutableName());
 	}
 
 	public Path getModsDirectory(Path assemblyPath) {
