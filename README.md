@@ -10,7 +10,7 @@ Many thanks to the developers of this amazing tool!*
 
 ## Compatibility
 
-This mod loader has been tested for **The Long Dark v1.27** on **Windows x64** and **Linux x64**.  
+This mod loader has been tested for **The Long Dark v1.56** on **Windows x64** and **Linux x64**.  
 **Mac OS** and 32-bit operating systems have not been tested, but the tool should theoretically work there, too.  
 If you are able to test the the installer and mod loader on any of these platforms,
 please report your findings - whether it be successful or not - to the
@@ -18,9 +18,11 @@ please report your findings - whether it be successful or not - to the
 
 ## Installation instructions
 
+### **Note that only TLD versions up to 1.56 are supported!**
+
 #### Windows (64-bit):
 
-- **Download** `ModLoaderInstaller-Windows-x64.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
+- **Download** `ModLoaderInstaller-Windows-x64.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/)
 - **Extract** the entire ZIP archive
 - **Run** `ModLoaderInstaller.exe` by double-clicking the file.
 - Select TLD's **executable file** (e.g. at `C:\Program Files (x86)\Steam\SteamApps\common\TheLongDark\tld.exe`)
@@ -31,7 +33,7 @@ please report your findings - whether it be successful or not - to the
 
 #### MacOS:
 
-- **Download** `ModLoaderInstaller-Mac.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/latest/)
+- **Download** `ModLoaderInstaller-Mac.zip` from the [downloads page](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller/releases/)
 - **Extract** the entire ZIP archive
 - **Run** `ModLoaderInstaller-Mac` by double-clicking the file.
 - Select TLD's **executable file** (usually at `~/Library/Application Support/Steam/steamapps/common/TheLongDark/tld.app`)
